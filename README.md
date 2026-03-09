@@ -12,7 +12,7 @@ Official plugin registry and development resources for [Hermes IDE](https://gith
 
 ```
 registry/       Plugin registry index
-plugins/        Official and community plugins (approved by Hermes HQ)
+plugins/        Official and community plugins (approved by Hermes IDE)
 templates/      Plugin project templates
 docs/           Development guides and API reference
 ```
@@ -71,7 +71,7 @@ Plugins must be built as IIFE bundles with React externalized:
 
 ## Plugin Review Process
 
-All plugins in this registry are reviewed and approved by the Hermes HQ team. The app only installs plugins from this official registry — there is no way to install arbitrary plugins from external sources.
+All plugins in this registry are reviewed and approved by the Hermes IDE team. The app only installs plugins from this official registry — there is no way to install arbitrary plugins from external sources.
 
 To submit a plugin:
 
@@ -87,6 +87,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for full details and review criteria.
 | Plugin | Description |
 |--------|-------------|
 | [JSON Formatter](./plugins/json-formatter) | Format, minify, and validate JSON |
+| [UUID Generator](./plugins/uuid-generator) | Generate UUIDs in all standard versions (v1, v4, v5, v7) with batch support |
 
 ## License
 
