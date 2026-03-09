@@ -12,9 +12,17 @@ Official plugin registry and development resources for [Hermes IDE](https://gith
 
 ```
 registry/       Plugin registry index
-plugins/        Official plugins
+plugins/        Official and community plugins (approved by Hermes HQ)
 templates/      Plugin project templates
+docs/           Development guides and API reference
 ```
+
+## Documentation
+
+- [**Development Guide**](./docs/DEVELOPMENT.md) — How to create and test plugins
+- [**Plugin API Reference**](./docs/PLUGIN-API.md) — Full API documentation
+- [**Manifest Reference**](./docs/MANIFEST.md) — hermes-plugin.json schema
+- [**Contributing**](./CONTRIBUTING.md) — How to submit a plugin for review
 
 ## Creating a Plugin
 
@@ -26,6 +34,8 @@ templates/      Plugin project templates
    - macOS: `~/Library/Application Support/com.hermes-ide.terminal/plugins/your-plugin-id/`
    - Linux: `~/.config/com.hermes-ide.terminal/plugins/your-plugin-id/`
    - Windows: `%APPDATA%/com.hermes-ide.terminal/plugins/your-plugin-id/`
+
+See the [Development Guide](./docs/DEVELOPMENT.md) for a detailed walkthrough including symlink-based dev workflow, theming, and API usage.
 
 ## Plugin Format
 
@@ -58,6 +68,19 @@ Plugins must be built as IIFE bundles with React externalized:
 - Use `jsx: "react"` (classic runtime) in tsconfig.json
 - Externalize `react` in Vite/Rollup config
 - React is provided as `window.React` by the host app
+
+## Plugin Review Process
+
+All plugins in this registry are reviewed and approved by the Hermes HQ team. The app only installs plugins from this official registry — there is no way to install arbitrary plugins from external sources.
+
+To submit a plugin:
+
+1. Fork this repository
+2. Add your plugin to `plugins/your-plugin-name/`
+3. Add an entry to `registry/index.json`
+4. Open a Pull Request
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for full details and review criteria.
 
 ## Official Plugins
 
