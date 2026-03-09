@@ -1,0 +1,37 @@
+{
+  "id": "hermes-hq.uuid-generator",
+  "name": "UUID Generator",
+  "version": "1.0.0",
+  "description": "Generate UUIDs in all standard versions (v1, v4, v5, v7) with batch support",
+  "author": "Hermes IDE",
+  "main": "dist/index.js",
+  "activationEvents": [
+    { "type": "onStartup" }
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "uuid.generate", "title": "Generate UUID", "category": "UUID" },
+      { "command": "uuid.generateV4", "title": "Generate UUID v4 (copy)", "category": "UUID" },
+      { "command": "uuid.openPanel", "title": "Open UUID Generator", "category": "UUID" }
+    ],
+    "panels": [
+      {
+        "id": "uuid-generator-panel",
+        "name": "UUID",
+        "side": "left",
+        "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"14\" height=\"14\" rx=\"2\"/><path d=\"M6 6h1.5M10.5 6H12M6 9h6M6 12h3\"/></svg>"
+      }
+    ],
+    "statusBarItems": [
+      {
+        "id": "uuid.status",
+        "text": "UUID",
+        "tooltip": "Generate UUID",
+        "alignment": "right",
+        "priority": 40,
+        "command": "uuid.openPanel"
+      }
+    ]
+  },
+  "permissions": ["clipboard.write"]
+}

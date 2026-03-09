@@ -37,7 +37,7 @@ Copy (or symlink) the built plugin to your Hermes IDE plugins directory and rest
 Your PR must include:
 
 - Your plugin source in `plugins/your-plugin-name/`
-- An entry added to `registry/index.json` with your plugin's metadata
+- An entry added to `registry/index.json` with your plugin's metadata (see [Registry Entry Format](#registry-entry-format) below)
 
 ### 6. Review
 
@@ -87,6 +87,27 @@ During code review, the team checks for:
 4. Open a Pull Request.
 
 Updates submitted by the original plugin author receive expedited review.
+
+---
+
+## Registry Entry Format
+
+Each plugin entry in `registry/index.json` has the following fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Must match the `id` in your `hermes-plugin.json` |
+| `name` | string | Yes | Display name shown in the Plugin Store |
+| `version` | string | Yes | Current published version |
+| `description` | string | Yes | Short description |
+| `author` | string | Yes | Author name |
+| `icon` | string | No | Inline SVG string for the store card (24x24 viewBox recommended, use `currentColor`) |
+| `category` | string | No | Category label (e.g., `"Formatters"`, `"Dev Tools"`, `"Themes"`, `"Utilities"`) |
+| `downloadUrl` | string | Yes | URL to the `.tgz` release asset |
+| `minAppVersion` | string | No | Minimum Hermes IDE version required |
+| `permissions` | array | No | Permissions the plugin requires |
+
+**Icon guidelines:** Keep the SVG simple. Use a `viewBox="0 0 24 24"` with stroke-based paths. The store renders icons at 36x36px with the app's accent color.
 
 ---
 

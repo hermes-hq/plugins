@@ -3,7 +3,7 @@
   "name": "JSON Formatter",
   "version": "1.0.0",
   "description": "Format, minify, and validate JSON from clipboard or manual input",
-  "author": "Hermes HQ",
+  "author": "Hermes IDE",
   "main": "dist/index.js",
   "activationEvents": [
     { "type": "onStartup" }
