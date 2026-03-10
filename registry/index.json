@@ -36,6 +36,30 @@
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.0/hermes-hq.pomodoro-timer-1.0.0.tgz",
       "minAppVersion": "0.4.0",
       "permissions": ["storage", "notifications"]
+    },
+    {
+      "id": "hermes-hq.session-notes",
+      "name": "Session Notes",
+      "version": "1.0.0",
+      "description": "Markdown scratchpad for each terminal session with auto-save and session-aware switching",
+      "author": "Hermes IDE",
+      "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z\"/><path d=\"M8 7h8M8 11h8M8 15h4\"/></svg>",
+      "category": "Productivity",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/session-notes-v1.0.0/hermes-hq.session-notes-1.0.0.tgz",
+      "minAppVersion": "0.4.0",
+      "permissions": ["storage", "sessions.read"]
+    },
+    {
+      "id": "hermes-hq.regex-tester",
+      "name": "Regex Tester",
+      "version": "1.0.0",
+      "description": "Test regular expressions with live match highlighting, capture groups, and common presets",
+      "author": "Hermes IDE",
+      "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M4 12h16\"/><path d=\"M12 4v16\"/><circle cx=\"7\" cy=\"7\" r=\"2\"/><circle cx=\"17\" cy=\"17\" r=\"2\"/><path d=\"M17 7L7 17\"/></svg>",
+      "category": "Development",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/regex-tester-v1.0.0/hermes-hq.regex-tester-1.0.0.tgz",
+      "minAppVersion": "0.4.0",
+      "permissions": ["clipboard.write", "storage"]
     }
   ]
 }

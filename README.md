@@ -89,6 +89,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for full details and review criteria.
 | [JSON Formatter](./plugins/json-formatter) | Format, minify, and validate JSON |
 | [UUID Generator](./plugins/uuid-generator) | Generate UUIDs in all standard versions (v1, v4, v5, v7) with batch support |
 | [Pomodoro Timer](./plugins/pomodoro-timer) | Focus timer with configurable work and break intervals, notifications, and session tracking |
+| [Session Notes](./plugins/session-notes) | Markdown scratchpad for each terminal session with auto-save and session-aware switching |
+| [Regex Tester](./plugins/regex-tester) | Test regular expressions with live match highlighting, capture groups, and common presets |
 
 ## License
 

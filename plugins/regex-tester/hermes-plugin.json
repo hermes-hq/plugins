@@ -1,0 +1,64 @@
+{
+  "id": "hermes-hq.regex-tester",
+  "name": "Regex Tester",
+  "version": "1.0.0",
+  "description": "Test regular expressions with live match highlighting, capture groups, and common presets",
+  "author": "Hermes IDE",
+  "main": "dist/index.js",
+  "activationEvents": [
+    { "type": "onStartup" }
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "regex.open", "title": "Open Regex Tester", "category": "Regex" },
+      { "command": "regex.copyPattern", "title": "Copy Regex Pattern", "category": "Regex" }
+    ],
+    "panels": [
+      {
+        "id": "regex-tester-panel",
+        "name": "Regex",
+        "side": "left",
+        "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9h12\"/><path d=\"M9 3v12\"/><circle cx=\"5\" cy=\"5\" r=\"1.5\"/><circle cx=\"13\" cy=\"13\" r=\"1.5\"/><path d=\"M13 5l-8 8\"/></svg>"
+      }
+    ],
+    "statusBarItems": [
+      {
+        "id": "regex.status",
+        "text": "Regex",
+        "tooltip": "Regex Tester — Click to open",
+        "alignment": "right",
+        "priority": 30,
+        "command": "regex.open"
+      }
+    ],
+    "settings": {
+      "defaultFlags": {
+        "type": "string",
+        "title": "Default Flags",
+        "description": "Flags to apply by default (e.g. gi, gm, gims)",
+        "default": "g",
+        "placeholder": "g",
+        "maxLength": 6,
+        "order": 1
+      },
+      "maxMatches": {
+        "type": "number",
+        "title": "Max Matches",
+        "description": "Maximum number of matches to display (prevents freezing on greedy patterns)",
+        "default": 100,
+        "min": 10,
+        "max": 1000,
+        "step": 10,
+        "order": 2
+      },
+      "liveHighlight": {
+        "type": "boolean",
+        "title": "Live Highlighting",
+        "description": "Highlight matches as you type (disable for large inputs)",
+        "default": true,
+        "order": 3
+      }
+    }
+  },
+  "permissions": ["clipboard.write", "storage"]
+}
