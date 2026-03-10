@@ -4,16 +4,32 @@
     {
       "id": "hermes-hq.json-formatter",
       "name": "JSON Formatter",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Format, minify, and validate JSON from clipboard or manual input",
       "author": "Hermes IDE",
       "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M8 3H6a2 2 0 0 0-2 2v2m0 10v2a2 2 0 0 0 2 2h2M16 3h2a2 2 0 0 1 2 2v2m0 10v2a2 2 0 0 1-2 2h-2\"/><path d=\"M9 12h6M12 9v6\"/></svg>",
       "category": "Formatters",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/json-formatter-v1.0.0/hermes-hq.json-formatter-1.0.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/json-formatter-v1.0.1/hermes-hq.json-formatter-1.0.1.tgz",
       "minAppVersion": "0.3.0",
-      "permissions": ["clipboard.read", "clipboard.write"],
+      "permissions": [
+        "clipboard.read",
+        "clipboard.write"
+      ],
       "changelog": [
-        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with format, minify, and validation support"] }
+        {
+          "version": "1.0.1",
+          "date": "2026-03-10",
+          "changes": [
+            "Fixed error shown when formatting or minifying empty input"
+          ]
+        },
+        {
+          "version": "1.0.0",
+          "date": "2026-03-01",
+          "changes": [
+            "Initial release with format, minify, and validation support"
+          ]
+        }
       ]
     },
     {
@@ -26,9 +42,17 @@
       "category": "Utilities",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/uuid-generator-v1.0.0/hermes-hq.uuid-generator-1.0.0.tgz",
       "minAppVersion": "0.3.0",
-      "permissions": ["clipboard.write"],
+      "permissions": [
+        "clipboard.write"
+      ],
       "changelog": [
-        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with v1, v4, v5, and v7 generation"] }
+        {
+          "version": "1.0.0",
+          "date": "2026-03-01",
+          "changes": [
+            "Initial release with v1, v4, v5, and v7 generation"
+          ]
+        }
       ]
     },
     {
@@ -41,9 +65,18 @@
       "category": "Productivity",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.0/hermes-hq.pomodoro-timer-1.0.0.tgz",
       "minAppVersion": "0.4.0",
-      "permissions": ["storage", "notifications"],
+      "permissions": [
+        "storage",
+        "notifications"
+      ],
       "changelog": [
-        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with configurable work and break intervals"] }
+        {
+          "version": "1.0.0",
+          "date": "2026-03-01",
+          "changes": [
+            "Initial release with configurable work and break intervals"
+          ]
+        }
       ]
     },
     {
@@ -56,9 +89,18 @@
       "category": "Productivity",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/session-notes-v1.0.0/hermes-hq.session-notes-1.0.0.tgz",
       "minAppVersion": "0.4.0",
-      "permissions": ["storage", "sessions.read"],
+      "permissions": [
+        "storage",
+        "sessions.read"
+      ],
       "changelog": [
-        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with auto-save and session-aware switching"] }
+        {
+          "version": "1.0.0",
+          "date": "2026-03-01",
+          "changes": [
+            "Initial release with auto-save and session-aware switching"
+          ]
+        }
       ]
     },
     {
@@ -71,9 +113,18 @@
       "category": "Development",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/regex-tester-v1.0.0/hermes-hq.regex-tester-1.0.0.tgz",
       "minAppVersion": "0.4.0",
-      "permissions": ["clipboard.write", "storage"],
+      "permissions": [
+        "clipboard.write",
+        "storage"
+      ],
       "changelog": [
-        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with live highlighting and capture groups"] }
+        {
+          "version": "1.0.0",
+          "date": "2026-03-01",
+          "changes": [
+            "Initial release with live highlighting and capture groups"
+          ]
+        }
       ]
     }
   ]

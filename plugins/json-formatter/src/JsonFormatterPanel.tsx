@@ -26,6 +26,11 @@ export function JsonFormatterPanel() {
   }, []);
 
   const format = useCallback(() => {
+    if (!input.trim()) {
+      setError(null);
+      setOutput("");
+      return;
+    }
     try {
       const parsed = JSON.parse(input);
       setOutput(formatWithSettings(parsed));
@@ -39,6 +44,11 @@ export function JsonFormatterPanel() {
   }, [input, api]);
 
   const minify = useCallback(() => {
+    if (!input.trim()) {
+      setError(null);
+      setOutput("");
+      return;
+    }
     try {
       const parsed = JSON.parse(input);
       setOutput(JSON.stringify(parsed));
@@ -50,6 +60,11 @@ export function JsonFormatterPanel() {
   }, [input]);
 
   const validate = useCallback(() => {
+    if (!input.trim()) {
+      setError(null);
+      setOutput("");
+      return;
+    }
     try {
       JSON.parse(input);
       setError(null);

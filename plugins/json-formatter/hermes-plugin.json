@@ -1,19 +1,37 @@
 {
   "id": "hermes-hq.json-formatter",
   "name": "JSON Formatter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Format, minify, and validate JSON from clipboard or manual input",
   "author": "Hermes IDE",
   "main": "dist/index.js",
   "activationEvents": [
-    { "type": "onStartup" }
+    {
+      "type": "onStartup"
+    }
   ],
   "contributes": {
     "commands": [
-      { "command": "json-formatter.format", "title": "Format JSON", "category": "JSON" },
-      { "command": "json-formatter.minify", "title": "Minify JSON", "category": "JSON" },
-      { "command": "json-formatter.validate", "title": "Validate JSON", "category": "JSON" },
-      { "command": "json-formatter.openPanel", "title": "Open JSON Formatter", "category": "JSON" }
+      {
+        "command": "json-formatter.format",
+        "title": "Format JSON",
+        "category": "JSON"
+      },
+      {
+        "command": "json-formatter.minify",
+        "title": "Minify JSON",
+        "category": "JSON"
+      },
+      {
+        "command": "json-formatter.validate",
+        "title": "Validate JSON",
+        "category": "JSON"
+      },
+      {
+        "command": "json-formatter.openPanel",
+        "title": "Open JSON Formatter",
+        "category": "JSON"
+      }
     ],
     "panels": [
       {
@@ -41,9 +59,18 @@
         "default": "2",
         "order": 1,
         "options": [
-          { "value": "1", "label": "1 space" },
-          { "value": "2", "label": "2 spaces" },
-          { "value": "4", "label": "4 spaces" }
+          {
+            "value": "1",
+            "label": "1 space"
+          },
+          {
+            "value": "2",
+            "label": "2 spaces"
+          },
+          {
+            "value": "4",
+            "label": "4 spaces"
+          }
         ]
       },
       "sortKeys": {
@@ -64,5 +91,8 @@
       }
     }
   },
-  "permissions": ["clipboard.read", "clipboard.write"]
+  "permissions": [
+    "clipboard.read",
+    "clipboard.write"
+  ]
 }
