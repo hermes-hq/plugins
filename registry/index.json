@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "plugins": [
     {
       "id": "hermes-hq.json-formatter",
@@ -11,7 +11,10 @@
       "category": "Formatters",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/json-formatter-v1.0.0/hermes-hq.json-formatter-1.0.0.tgz",
       "minAppVersion": "0.3.0",
-      "permissions": ["clipboard.read", "clipboard.write"]
+      "permissions": ["clipboard.read", "clipboard.write"],
+      "changelog": [
+        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with format, minify, and validation support"] }
+      ]
     },
     {
       "id": "hermes-hq.uuid-generator",
@@ -23,7 +26,10 @@
       "category": "Utilities",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/uuid-generator-v1.0.0/hermes-hq.uuid-generator-1.0.0.tgz",
       "minAppVersion": "0.3.0",
-      "permissions": ["clipboard.write"]
+      "permissions": ["clipboard.write"],
+      "changelog": [
+        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with v1, v4, v5, and v7 generation"] }
+      ]
     },
     {
       "id": "hermes-hq.pomodoro-timer",
@@ -35,7 +41,10 @@
       "category": "Productivity",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.0/hermes-hq.pomodoro-timer-1.0.0.tgz",
       "minAppVersion": "0.4.0",
-      "permissions": ["storage", "notifications"]
+      "permissions": ["storage", "notifications"],
+      "changelog": [
+        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with configurable work and break intervals"] }
+      ]
     },
     {
       "id": "hermes-hq.session-notes",
@@ -47,7 +56,10 @@
       "category": "Productivity",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/session-notes-v1.0.0/hermes-hq.session-notes-1.0.0.tgz",
       "minAppVersion": "0.4.0",
-      "permissions": ["storage", "sessions.read"]
+      "permissions": ["storage", "sessions.read"],
+      "changelog": [
+        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with auto-save and session-aware switching"] }
+      ]
     },
     {
       "id": "hermes-hq.regex-tester",
@@ -59,7 +71,10 @@
       "category": "Development",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/regex-tester-v1.0.0/hermes-hq.regex-tester-1.0.0.tgz",
       "minAppVersion": "0.4.0",
-      "permissions": ["clipboard.write", "storage"]
+      "permissions": ["clipboard.write", "storage"],
+      "changelog": [
+        { "version": "1.0.0", "date": "2026-03-01", "changes": ["Initial release with live highlighting and capture groups"] }
+      ]
     }
   ]
 }
