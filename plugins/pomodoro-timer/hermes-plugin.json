@@ -1,0 +1,103 @@
+{
+  "id": "hermes-hq.pomodoro-timer",
+  "name": "Pomodoro Timer",
+  "version": "1.0.0",
+  "description": "Focus timer with configurable work and break intervals, notifications, and session tracking",
+  "author": "Hermes IDE",
+  "main": "dist/index.js",
+  "activationEvents": [
+    { "type": "onStartup" }
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "pomodoro.start", "title": "Start Pomodoro", "category": "Pomodoro" },
+      { "command": "pomodoro.pause", "title": "Pause Pomodoro", "category": "Pomodoro" },
+      { "command": "pomodoro.reset", "title": "Reset Pomodoro", "category": "Pomodoro" },
+      { "command": "pomodoro.openPanel", "title": "Open Pomodoro Timer", "category": "Pomodoro" }
+    ],
+    "panels": [
+      {
+        "id": "pomodoro-panel",
+        "name": "Pomodoro",
+        "side": "left",
+        "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"10\" r=\"7\"/><path d=\"M9 6v4l2.5 1.5\"/><path d=\"M7 3h4\"/></svg>"
+      }
+    ],
+    "statusBarItems": [
+      {
+        "id": "pomodoro.status",
+        "text": "25:00",
+        "tooltip": "Pomodoro Timer — Click to open",
+        "alignment": "right",
+        "priority": 60,
+        "command": "pomodoro.openPanel"
+      }
+    ],
+    "settings": {
+      "workDuration": {
+        "type": "select",
+        "title": "Work Duration",
+        "description": "Length of each focus session",
+        "default": "25",
+        "order": 1,
+        "options": [
+          { "value": "15", "label": "15 minutes" },
+          { "value": "20", "label": "20 minutes" },
+          { "value": "25", "label": "25 minutes" },
+          { "value": "30", "label": "30 minutes" },
+          { "value": "45", "label": "45 minutes" },
+          { "value": "50", "label": "50 minutes" },
+          { "value": "60", "label": "60 minutes" }
+        ]
+      },
+      "breakDuration": {
+        "type": "select",
+        "title": "Break Duration",
+        "description": "Length of short breaks between sessions",
+        "default": "5",
+        "order": 2,
+        "options": [
+          { "value": "3", "label": "3 minutes" },
+          { "value": "5", "label": "5 minutes" },
+          { "value": "10", "label": "10 minutes" },
+          { "value": "15", "label": "15 minutes" }
+        ]
+      },
+      "longBreakDuration": {
+        "type": "select",
+        "title": "Long Break Duration",
+        "description": "Length of break after every 4 sessions",
+        "default": "15",
+        "order": 3,
+        "options": [
+          { "value": "10", "label": "10 minutes" },
+          { "value": "15", "label": "15 minutes" },
+          { "value": "20", "label": "20 minutes" },
+          { "value": "30", "label": "30 minutes" }
+        ]
+      },
+      "autoStartBreak": {
+        "type": "boolean",
+        "title": "Auto-Start Break",
+        "description": "Automatically start break when work session ends",
+        "default": true,
+        "order": 4
+      },
+      "autoStartWork": {
+        "type": "boolean",
+        "title": "Auto-Start Work",
+        "description": "Automatically start next work session when break ends",
+        "default": false,
+        "order": 5
+      },
+      "showNotifications": {
+        "type": "boolean",
+        "title": "Show Notifications",
+        "description": "Show desktop notification when timer completes",
+        "default": true,
+        "order": 6
+      }
+    }
+  },
+  "permissions": ["storage", "notifications"]
+}

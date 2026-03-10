@@ -24,6 +24,18 @@
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/uuid-generator-v1.0.0/hermes-hq.uuid-generator-1.0.0.tgz",
       "minAppVersion": "0.3.0",
       "permissions": ["clipboard.write"]
+    },
+    {
+      "id": "hermes-hq.pomodoro-timer",
+      "name": "Pomodoro Timer",
+      "version": "1.0.0",
+      "description": "Focus timer with configurable work and break intervals, notifications, and session tracking",
+      "author": "Hermes IDE",
+      "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"13\" r=\"9\"/><path d=\"M12 7v4l3 2\"/><path d=\"M9 2h6\"/></svg>",
+      "category": "Productivity",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.0/hermes-hq.pomodoro-timer-1.0.0.tgz",
+      "minAppVersion": "0.4.0",
+      "permissions": ["storage", "notifications"]
     }
   ]
 }
