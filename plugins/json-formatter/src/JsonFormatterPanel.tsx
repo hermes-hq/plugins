@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { getAPI } from "./activate";
+import { useState, useCallback, useEffect } from "react";
+import { getAPI, getSettings, onSettingsChanged, formatWithSettings } from "./activate";
 
-const styles = `.json-fmt{display:flex;flex-direction:column;height:100%;padding:12px;gap:8px;overflow-y:auto;min-width:220px;max-width:400px;border-right:1px solid var(--border);background:var(--bg-1)}.json-fmt-header{display:flex;justify-content:space-between;align-items:center}.json-fmt-title{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;color:var(--text-2);letter-spacing:.05em}.json-fmt-actions{display:flex;gap:8px}.json-fmt-link-btn{background:none;border:none;color:var(--accent);font-size:var(--text-xs);cursor:pointer;padding:0}.json-fmt-link-btn:hover{text-decoration:underline}.json-fmt-input{flex:0 0 auto;min-height:100px;max-height:200px;resize:vertical;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;font-family:var(--font-mono);font-size:var(--text-sm);outline:none}.json-fmt-input:focus{border-color:var(--accent)}.json-fmt-input::placeholder{color:var(--text-3,var(--text-2));opacity:.5}.json-fmt-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px}.json-fmt-btn-group{display:flex;gap:4px}.json-fmt-btn{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);padding:4px 10px;font-size:var(--text-xs);cursor:pointer;transition:background .15s}.json-fmt-btn:hover{background:var(--bg-hover,var(--bg-2))}.json-fmt-btn-primary{background:var(--accent);color:var(--bg-1);border-color:var(--accent)}.json-fmt-btn-primary:hover{opacity:.9}.json-fmt-select{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-2);font-size:var(--text-xs);padding:3px 6px;outline:none}.json-fmt-error{color:var(--red);font-size:var(--text-xs);font-family:var(--font-mono);padding:4px 0;word-break:break-word}.json-fmt-output-wrap{position:relative;flex:1;min-height:60px}.json-fmt-output{margin:0;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;font-family:var(--font-mono);font-size:var(--text-sm);overflow:auto;max-height:300px;white-space:pre-wrap;word-break:break-word}.json-fmt-copy-btn{position:absolute;top:4px;right:4px;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--accent);font-size:var(--text-xs);padding:2px 8px;cursor:pointer;opacity:.8}.json-fmt-copy-btn:hover{opacity:1}`;
+const styles = `.json-fmt{display:flex;flex-direction:column;height:100%;padding:12px;gap:8px;overflow-y:auto;min-width:220px;max-width:400px;border-right:1px solid var(--border);background:var(--bg-1)}.json-fmt-header{display:flex;justify-content:space-between;align-items:center}.json-fmt-title{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;color:var(--text-2);letter-spacing:.05em}.json-fmt-actions{display:flex;gap:8px}.json-fmt-link-btn{background:none;border:none;color:var(--accent);font-size:var(--text-xs);cursor:pointer;padding:0}.json-fmt-link-btn:hover{text-decoration:underline}.json-fmt-input{flex:0 0 auto;min-height:100px;max-height:200px;resize:vertical;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;font-family:var(--font-mono);font-size:var(--text-sm);outline:none}.json-fmt-input:focus{border-color:var(--accent)}.json-fmt-input::placeholder{color:var(--text-3,var(--text-2));opacity:.5}.json-fmt-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px}.json-fmt-btn-group{display:flex;gap:4px}.json-fmt-btn{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);padding:4px 10px;font-size:var(--text-xs);cursor:pointer;transition:background .15s}.json-fmt-btn:hover{background:var(--bg-hover,var(--bg-2))}.json-fmt-btn-primary{background:var(--accent);color:var(--bg-1);border-color:var(--accent)}.json-fmt-btn-primary:hover{opacity:.9}.json-fmt-settings-hint{font-size:var(--text-xs);color:var(--text-3)}.json-fmt-error{color:var(--red);font-size:var(--text-xs);font-family:var(--font-mono);padding:4px 0;word-break:break-word}.json-fmt-output-wrap{position:relative;flex:1;min-height:60px}.json-fmt-output{margin:0;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;font-family:var(--font-mono);font-size:var(--text-sm);overflow:auto;max-height:300px;white-space:pre-wrap;word-break:break-word}.json-fmt-copy-btn{position:absolute;top:4px;right:4px;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--accent);font-size:var(--text-xs);padding:2px 8px;cursor:pointer;opacity:.8}.json-fmt-copy-btn:hover{opacity:1}`;
 
 let stylesInjected = false;
 function injectStyles() {
@@ -18,12 +18,17 @@ export function JsonFormatterPanel() {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [indent, setIndent] = useState(2);
+  const [settings, setSettings] = useState(getSettings);
+
+  // Re-read settings when they change via the settings panel
+  useEffect(() => {
+    return onSettingsChanged(() => setSettings(getSettings()));
+  }, []);
 
   const format = useCallback(() => {
     try {
       const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed, null, indent));
+      setOutput(formatWithSettings(parsed));
       setError(null);
       api.ui.updateStatusBarItem("json-formatter.status", { text: "JSON Valid" });
     } catch (e) {
@@ -31,7 +36,7 @@ export function JsonFormatterPanel() {
       setOutput("");
       api.ui.updateStatusBarItem("json-formatter.status", { text: "JSON Invalid" });
     }
-  }, [input, indent, api]);
+  }, [input, api]);
 
   const minify = useCallback(() => {
     try {
@@ -82,6 +87,11 @@ export function JsonFormatterPanel() {
     api.ui.updateStatusBarItem("json-formatter.status", { text: "JSON" });
   }, [api]);
 
+  const settingsHints: string[] = [];
+  if (settings.sortKeys) settingsHints.push("sort keys");
+  if (settings.maxDepth > 0) settingsHints.push(`depth ${settings.maxDepth}`);
+  settingsHints.push(`${settings.indentSize}sp`);
+
   return (
     <div className="json-fmt">
       <div className="json-fmt-header">
@@ -106,15 +116,7 @@ export function JsonFormatterPanel() {
           <button onClick={minify} className="json-fmt-btn">Minify</button>
           <button onClick={validate} className="json-fmt-btn">Validate</button>
         </div>
-        <select
-          className="json-fmt-select"
-          value={indent}
-          onChange={(e) => setIndent(Number(e.target.value))}
-        >
-          <option value={2}>2 spaces</option>
-          <option value={4}>4 spaces</option>
-          <option value={1}>1 space</option>
-        </select>
+        <span className="json-fmt-settings-hint">{settingsHints.join(" · ")}</span>
       </div>
 
       {error && <div className="json-fmt-error">{error}</div>}

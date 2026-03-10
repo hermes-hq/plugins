@@ -32,18 +32,117 @@ interface HermesPluginAPI {
     set(key: string, value: string): Promise<void>;
     delete(key: string): Promise<void>;
   };
+  settings: {
+    get<T = string | number | boolean>(key: string): Promise<T>;
+    update(key: string, value: string | number | boolean): Promise<void>;
+    onDidChange(key: string, callback: (newValue: string | number | boolean) => void): Disposable;
+    getAll(): Promise<Record<string, string | number | boolean>>;
+  };
   subscriptions: Disposable[];
 }
 
 let hermesAPI: HermesPluginAPI | null = null;
+
+// ─── Settings cache ──────────────────────────────────────────────────
+let indentSize = 2;
+let sortKeys = false;
+let maxDepth = 0; // 0 = unlimited
+let settingsListeners: Array<() => void> = [];
 
 export function getAPI(): HermesPluginAPI {
   if (!hermesAPI) throw new Error("JSON Formatter plugin not activated");
   return hermesAPI;
 }
 
-export function activate(api: HermesPluginAPI) {
+export function getSettings() {
+  return { indentSize, sortKeys, maxDepth };
+}
+
+export function onSettingsChanged(cb: () => void): () => void {
+  settingsListeners.push(cb);
+  return () => { settingsListeners = settingsListeners.filter((l) => l !== cb); };
+}
+
+function notifySettingsListeners() {
+  settingsListeners.forEach((cb) => cb());
+}
+
+async function loadSettings() {
+  if (!hermesAPI) return;
+  try {
+    const all = await hermesAPI.settings.getAll();
+    indentSize = parseInt(String(all.indentSize), 10) || 2;
+    sortKeys = all.sortKeys === true;
+    maxDepth = parseInt(String(all.maxDepth), 10) || 0;
+  } catch {
+    // Use defaults
+  }
+}
+
+/** Recursively sort object keys. */
+function sortObjectKeys(val: unknown): unknown {
+  if (Array.isArray(val)) return val.map(sortObjectKeys);
+  if (val !== null && typeof val === "object") {
+    const sorted: Record<string, unknown> = {};
+    for (const key of Object.keys(val as Record<string, unknown>).sort()) {
+      sorted[key] = sortObjectKeys((val as Record<string, unknown>)[key]);
+    }
+    return sorted;
+  }
+  return val;
+}
+
+/** Truncate deeply nested values beyond maxDepth. */
+function truncateDepth(val: unknown, depth: number, limit: number): unknown {
+  if (limit > 0 && depth >= limit) {
+    if (Array.isArray(val)) return `[Array(${val.length})]`;
+    if (val !== null && typeof val === "object") return `{Object(${Object.keys(val as Record<string, unknown>).length})}`;
+    return val;
+  }
+  if (Array.isArray(val)) return val.map((v) => truncateDepth(v, depth + 1, limit));
+  if (val !== null && typeof val === "object") {
+    const result: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(val as Record<string, unknown>)) {
+      result[k] = truncateDepth(v, depth + 1, limit);
+    }
+    return result;
+  }
+  return val;
+}
+
+/** Format a parsed JSON value using current settings. */
+export function formatWithSettings(parsed: unknown): string {
+  let val = parsed;
+  if (sortKeys) val = sortObjectKeys(val);
+  if (maxDepth > 0) val = truncateDepth(val, 0, maxDepth);
+  return JSON.stringify(val, null, indentSize);
+}
+
+export async function activate(api: HermesPluginAPI) {
   hermesAPI = api;
+
+  // Load settings before registering anything
+  await loadSettings();
+
+  // Listen for settings changes at runtime
+  api.subscriptions.push(
+    api.settings.onDidChange("indentSize", (v) => {
+      indentSize = parseInt(String(v), 10) || 2;
+      notifySettingsListeners();
+    })
+  );
+  api.subscriptions.push(
+    api.settings.onDidChange("sortKeys", (v) => {
+      sortKeys = v === true;
+      notifySettingsListeners();
+    })
+  );
+  api.subscriptions.push(
+    api.settings.onDidChange("maxDepth", (v) => {
+      maxDepth = parseInt(String(v), 10) || 0;
+      notifySettingsListeners();
+    })
+  );
 
   api.ui.registerPanel("json-formatter-panel", JsonFormatterPanel);
 
@@ -58,7 +157,7 @@ export function activate(api: HermesPluginAPI) {
       try {
         const text = await api.clipboard.readText();
         const parsed = JSON.parse(text);
-        const formatted = JSON.stringify(parsed, null, 2);
+        const formatted = formatWithSettings(parsed);
         await api.clipboard.writeText(formatted);
         api.ui.showToast("JSON formatted and copied to clipboard", { type: "success" });
       } catch {
@@ -96,4 +195,9 @@ export function activate(api: HermesPluginAPI) {
 
 export function deactivate() {
   hermesAPI = null;
+  settingsListeners = [];
+  // Reset to defaults so a fresh activate() starts clean
+  indentSize = 2;
+  sortKeys = false;
+  maxDepth = 0;
 }
