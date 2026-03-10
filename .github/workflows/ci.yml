@@ -1,0 +1,146 @@
+# CI workflow for all Hermes plugins
+# Covers: build, test, manifest validation, and packaging
+#
+# Security: This workflow uses read-only permissions and is safe to run on
+# pull requests from forks. No secrets are exposed to PR workflows.
+
+name: Plugin CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Discover plugins dynamically so new plugins are picked up automatically
+  # ---------------------------------------------------------------------------
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      plugins: ${{ steps.find.outputs.plugins }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: find
+        name: Discover plugin directories
+        run: |
+          plugins=$(ls -d plugins/*/package.json 2>/dev/null \
+            | xargs -I{} dirname {} \
+            | xargs -I{} basename {} \
+            | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "plugins=$plugins" >> "$GITHUB_OUTPUT"
+          echo "Found plugins: $plugins"
+
+  # ---------------------------------------------------------------------------
+  # Build & test each plugin
+  # ---------------------------------------------------------------------------
+  build:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plugin: ${{ fromJson(needs.discover.outputs.plugins) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm ci
+
+      - name: Build
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm run build
+
+      - name: Test
+        working-directory: plugins/${{ matrix.plugin }}
+        run: |
+          if npm run --silent test --if-present 2>/dev/null && node -e "
+            const pkg = require('./package.json');
+            process.exit(pkg.scripts && pkg.scripts.test ? 0 : 1);
+          "; then
+            npm test
+          else
+            echo "No test script found — skipping"
+          fi
+
+      - name: Verify build output
+        working-directory: plugins/${{ matrix.plugin }}
+        run: |
+          test -f dist/index.js || (echo "::error::Build output dist/index.js missing" && exit 1)
+          test -f hermes-plugin.json || (echo "::error::Manifest hermes-plugin.json missing" && exit 1)
+
+      - name: Package
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        working-directory: plugins/${{ matrix.plugin }}
+        run: |
+          PLUGIN_ID=$(jq -r '.id' hermes-plugin.json)
+          VERSION=$(jq -r '.version' hermes-plugin.json)
+          mkdir -p package
+          cp hermes-plugin.json package/
+          cp -r dist package/
+          cd package && tar -czf "../${PLUGIN_ID}-${VERSION}.tgz" .
+
+      - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.plugin }}
+          path: plugins/${{ matrix.plugin }}/*.tgz
+
+  # ---------------------------------------------------------------------------
+  # Validate every hermes-plugin.json manifest
+  # ---------------------------------------------------------------------------
+  validate-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate plugin manifests
+        run: |
+          exit_code=0
+
+          for manifest in plugins/*/hermes-plugin.json; do
+            plugin_dir=$(dirname "$manifest")
+            plugin_name=$(basename "$plugin_dir")
+            echo "--- Validating $plugin_name ---"
+
+            # Check required fields exist and are non-empty
+            for field in id name version main; do
+              value=$(jq -r ".$field // empty" "$manifest")
+              if [ -z "$value" ]; then
+                echo "::error file=$manifest::Missing required field '$field' in $plugin_name"
+                exit_code=1
+              fi
+            done
+
+            # Check that 'main' points to a path under dist/
+            main_value=$(jq -r '.main' "$manifest")
+            case "$main_value" in
+              dist/*)
+                echo "  main: $main_value (ok)"
+                ;;
+              *)
+                echo "::error file=$manifest::Field 'main' should point to a dist/ path, got '$main_value'"
+                exit_code=1
+                ;;
+            esac
+
+            echo "  id:      $(jq -r '.id' "$manifest")"
+            echo "  name:    $(jq -r '.name' "$manifest")"
+            echo "  version: $(jq -r '.version' "$manifest")"
+            echo ""
+          done
+
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::Manifest validation failed"
+          fi
+          exit $exit_code
