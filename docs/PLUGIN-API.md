@@ -100,7 +100,7 @@ api.ui.togglePanel("my-plugin-panel");
 
 ### `api.ui.showToast(message, options?)`
 
-Show a toast notification at the bottom of the app.
+Show a toast notification in the top-right corner of the app. Toasts stack vertically and support action buttons.
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
