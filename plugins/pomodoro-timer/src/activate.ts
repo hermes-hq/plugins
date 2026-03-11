@@ -293,11 +293,23 @@ export async function activate(pluginApi: HermesPluginAPI) {
 	api.subscriptions.push(
 		api.settings.onDidChange("breakDuration", (v) => {
 			breakDuration = parseInt(String(v), 10) || 5;
+			if (pomodoroState.state === "idle" && pomodoroState.phase === "break") {
+				pomodoroState.totalSeconds = breakDuration * 60;
+				pomodoroState.secondsRemaining = breakDuration * 60;
+				updateStatusBar();
+				notifyListeners();
+			}
 		})
 	);
 	api.subscriptions.push(
 		api.settings.onDidChange("longBreakDuration", (v) => {
 			longBreakDuration = parseInt(String(v), 10) || 15;
+			if (pomodoroState.state === "idle" && pomodoroState.phase === "longBreak") {
+				pomodoroState.totalSeconds = longBreakDuration * 60;
+				pomodoroState.secondsRemaining = longBreakDuration * 60;
+				updateStatusBar();
+				notifyListeners();
+			}
 		})
 	);
 	api.subscriptions.push(
@@ -336,4 +348,12 @@ export function deactivate() {
 	stopInterval();
 	api = null;
 	listeners.clear();
+	pomodoroState = {
+		phase: "idle",
+		state: "idle",
+		secondsRemaining: 25 * 60,
+		totalSeconds: 25 * 60,
+		completedPomodoros: 0,
+		sessionsUntilLongBreak: 4,
+	};
 }

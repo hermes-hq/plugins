@@ -575,6 +575,73 @@ describe("Pomodoro Timer", () => {
 			expect(getState().secondsRemaining).toBe(secondsBefore);
 		});
 
+		it("should update break duration when idle in break phase and breakDuration setting changes", async () => {
+			const api = await activateNoAutoStart();
+			startTimer();
+			vi.advanceTimersByTime(25 * 60 * 1000);
+			await vi.runAllTimersAsync();
+			// Now in break phase, idle
+			expect(getState().phase).toBe("break");
+			expect(getState().state).toBe("idle");
+			expect(getState().secondsRemaining).toBe(5 * 60);
+			// Trigger breakDuration change
+			const breakDurationCall = api.settings.onDidChange.mock.calls.find(
+				(call: any[]) => call[0] === "breakDuration",
+			);
+			expect(breakDurationCall).toBeDefined();
+			const callback = breakDurationCall![1];
+			callback("10");
+			const state = getState();
+			expect(state.secondsRemaining).toBe(10 * 60);
+			expect(state.totalSeconds).toBe(10 * 60);
+		});
+
+		it("should update long break duration when idle in longBreak phase and longBreakDuration setting changes", async () => {
+			const api = await activateNoAutoStart();
+			// Complete 4 work sessions to reach longBreak
+			for (let i = 0; i < 4; i++) {
+				startTimer();
+				vi.advanceTimersByTime(25 * 60 * 1000);
+				await vi.runAllTimersAsync();
+				if (i < 3) {
+					startTimer();
+					vi.advanceTimersByTime(5 * 60 * 1000);
+					await vi.runAllTimersAsync();
+				}
+			}
+			expect(getState().phase).toBe("longBreak");
+			expect(getState().state).toBe("idle");
+			expect(getState().secondsRemaining).toBe(15 * 60);
+			// Trigger longBreakDuration change
+			const longBreakCall = api.settings.onDidChange.mock.calls.find(
+				(call: any[]) => call[0] === "longBreakDuration",
+			);
+			expect(longBreakCall).toBeDefined();
+			const callback = longBreakCall![1];
+			callback("20");
+			const state = getState();
+			expect(state.secondsRemaining).toBe(20 * 60);
+			expect(state.totalSeconds).toBe(20 * 60);
+		});
+
+		it("should not update break timer when breakDuration changes while running", async () => {
+			const api = await activateNoAutoStart();
+			startTimer();
+			vi.advanceTimersByTime(25 * 60 * 1000);
+			await vi.runAllTimersAsync();
+			// Start the break
+			startTimer();
+			vi.advanceTimersByTime(2000);
+			const secondsBefore = getState().secondsRemaining;
+			// Trigger breakDuration change
+			const breakDurationCall = api.settings.onDidChange.mock.calls.find(
+				(call: any[]) => call[0] === "breakDuration",
+			);
+			const callback = breakDurationCall![1];
+			callback("10");
+			expect(getState().secondsRemaining).toBe(secondsBefore);
+		});
+
 		it("should not update timer when in break phase even if idle", async () => {
 			const api = await activateNoAutoStart();
 			startTimer();
