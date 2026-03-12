@@ -642,6 +642,20 @@ describe("Pomodoro Timer", () => {
 			expect(getState().secondsRemaining).toBe(secondsBefore);
 		});
 
+		it("should show break duration in status bar when idle in break phase", async () => {
+			const api = await activateNoAutoStart();
+			startTimer();
+			vi.advanceTimersByTime(25 * 60 * 1000);
+			await vi.runAllTimersAsync();
+			// Now in break phase, idle
+			expect(getState().phase).toBe("break");
+			expect(getState().state).toBe("idle");
+			// Status bar should show the break duration (05:00), not the work duration (25:00)
+			const calls = api.ui.updateStatusBarItem.mock.calls;
+			const lastCall = calls[calls.length - 1];
+			expect(lastCall[1].text).toBe("05:00");
+		});
+
 		it("should not update timer when in break phase even if idle", async () => {
 			const api = await activateNoAutoStart();
 			startTimer();

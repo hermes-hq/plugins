@@ -105,7 +105,7 @@ function updateStatusBar() {
 	let tooltip: string;
 
 	if (state === "idle") {
-		text = formatTime(workDuration * 60);
+		text = formatTime(secondsRemaining);
 		tooltip = "Pomodoro Timer — Click to open";
 	} else {
 		const phaseLabel = phase === "work" ? "Focus" : phase === "longBreak" ? "Long Break" : "Break";

@@ -58,18 +58,25 @@
     {
       "id": "hermes-hq.pomodoro-timer",
       "name": "Pomodoro Timer",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "description": "Focus timer with configurable work and break intervals, notifications, and session tracking",
       "author": "Hermes IDE",
       "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"13\" r=\"9\"/><path d=\"M12 7v4l3 2\"/><path d=\"M9 2h6\"/></svg>",
       "category": "Productivity",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.1/hermes-hq.pomodoro-timer-1.0.1.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.2/hermes-hq.pomodoro-timer-1.0.2.tgz",
       "minAppVersion": "0.4.0",
       "permissions": [
         "storage",
         "notifications"
       ],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-03-12",
+          "changes": [
+            "Fixed status bar showing work duration instead of break/long-break duration when idle in those phases"
+          ]
+        },
         {
           "version": "1.0.1",
           "date": "2026-03-11",

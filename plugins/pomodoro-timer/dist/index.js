@@ -246,7 +246,7 @@ var __hermes_plugin__ = function(exports, React2) {
     let text;
     let tooltip;
     if (state === "idle") {
-      text = formatTime(workDuration * 60);
+      text = formatTime(secondsRemaining);
       tooltip = "Pomodoro Timer — Click to open";
     } else {
       const phaseLabel2 = phase === "work" ? "Focus" : phase === "longBreak" ? "Long Break" : "Break";

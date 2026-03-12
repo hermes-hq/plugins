@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.pomodoro-timer",
   "name": "Pomodoro Timer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Focus timer with configurable work and break intervals, notifications, and session tracking",
   "author": "Hermes IDE",
   "main": "dist/index.js",
