@@ -354,6 +354,16 @@ function FeedListView({ state }: { state: FeedState }) {
 										{unread > 0 && (
 											<span style={s.badge}>{unread}</span>
 										)}
+										<button
+											style={{ ...s.iconBtn, fontSize: "var(--text-xs)", opacity: 0.4, flexShrink: 0 }}
+											title={`Unsubscribe from ${feed.title}`}
+											onClick={(e) => {
+												e.stopPropagation();
+												removeFeed(feed.id);
+											}}
+										>
+											✕
+										</button>
 									</div>
 								);
 							})}
@@ -388,9 +398,16 @@ function ArticleListView({ state }: { state: FeedState }) {
 					>
 						←
 					</button>
-					<h3 style={{ ...s.headerTitle, textTransform: "none" as const, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
-						{feed.title}
-					</h3>
+					<div style={{ overflow: "hidden", flex: 1 }}>
+						<h3 style={{ ...s.headerTitle, textTransform: "none" as const, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+							{feed.title}
+						</h3>
+						{(feed.siteUrl || feed.url) && (
+							<div style={{ fontSize: "var(--text-sm)", color: "var(--text-3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+								{feed.siteUrl || feed.url}
+							</div>
+						)}
+					</div>
 				</div>
 				<div style={s.headerActions}>
 					{unread > 0 && (
