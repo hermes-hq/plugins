@@ -443,7 +443,8 @@ function ArticleListView({ state }: { state: FeedState }) {
 							onClick={() => {
 								markArticleRead(article.id);
 								if (article.link) {
-									window.open(article.link, "_blank");
+									const api = getAPI();
+									api.shell.openExternal(article.link);
 								}
 							}}
 							onContextMenu={(e) => {

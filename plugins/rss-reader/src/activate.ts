@@ -155,7 +155,7 @@ export async function addFeed(url: string, category: string = "Uncategorized", t
 		api.ui.showToast(`Added "${feed.title}"`, { type: "success" });
 	} catch (e: any) {
 		feeds = feeds.filter((f) => f.id !== id);
-		api.ui.showToast("Failed to load feed: " + (e.message || "Unknown error"), { type: "error" });
+		api.ui.showToast("Failed to load feed: " + (e instanceof Error ? e.message : String(e) || "Unknown error"), { type: "error" });
 	} finally {
 		loading.delete(id);
 		await saveState();
@@ -217,7 +217,7 @@ export async function refreshFeed(feedId: string) {
 		articles.push(...newArticles);
 		articles.sort((a, b) => b.pubDate - a.pubDate);
 	} catch (e: any) {
-		api.ui.showToast(`Failed to refresh "${feed.title}": ${e.message || "Unknown error"}`, { type: "error" });
+		api.ui.showToast(`Failed to refresh "${feed.title}": ${e instanceof Error ? e.message : String(e) || "Unknown error"}`, { type: "error" });
 	} finally {
 		loading.delete(feedId);
 		await saveState();
