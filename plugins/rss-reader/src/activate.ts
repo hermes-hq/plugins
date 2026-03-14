@@ -111,7 +111,7 @@ export function setSelectedCategory(cat: string | null) {
 	notifyListeners();
 }
 
-export async function addFeed(url: string, category: string = "Uncategorized", title?: string) {
+export async function addFeed(url: string, category: string = "Uncategorized", title?: string, opts?: { stayInView?: boolean }) {
 	if (!api) return;
 
 	const existing = feeds.find((f) => f.url === url);
@@ -133,7 +133,9 @@ export async function addFeed(url: string, category: string = "Uncategorized", t
 
 	feeds.push(feed);
 	loading.add(id);
-	view = "feeds";
+	if (!opts?.stayInView) {
+		view = "feeds";
+	}
 	notifyListeners();
 
 	try {

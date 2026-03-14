@@ -92,7 +92,7 @@ const s = {
 		color: "var(--bg-1)",
 		borderRadius: "9px",
 		padding: "1px 6px",
-		fontSize: "10px",
+		fontSize: "var(--text-sm)",
 		fontWeight: 600,
 		minWidth: "18px",
 		textAlign: "center" as const,
@@ -100,7 +100,7 @@ const s = {
 	},
 	categoryHeader: {
 		padding: "8px 12px 4px",
-		fontSize: "10px",
+		fontSize: "var(--text-sm)",
 		fontWeight: 600,
 		textTransform: "uppercase" as const,
 		color: "var(--text-3)",
@@ -122,11 +122,11 @@ const s = {
 		whiteSpace: "nowrap" as const,
 	},
 	articleMeta: {
-		fontSize: "10px",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 	},
 	articleDesc: {
-		fontSize: "10px",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-2)",
 		lineHeight: 1.3,
 		overflow: "hidden",
@@ -211,7 +211,7 @@ const s = {
 		whiteSpace: "nowrap" as const,
 	},
 	suggestedDesc: {
-		fontSize: "10px",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		overflow: "hidden",
 		textOverflow: "ellipsis",
@@ -575,35 +575,37 @@ function SuggestionsView({ state }: { state: FeedState }) {
 				</div>
 			</div>
 			<div style={s.body}>
-				{categories.map((cat) => (
-					<div key={cat}>
-						<div style={s.categoryHeader}>{cat}</div>
-						{SUGGESTED_FEEDS.filter((f) => f.category === cat).map((suggested) => {
-							const alreadyAdded = existingUrls.has(suggested.url);
-							return (
+				{categories.map((cat) => {
+					const available = SUGGESTED_FEEDS.filter(
+						(f) => f.category === cat && !existingUrls.has(f.url),
+					);
+					if (available.length === 0) return null;
+					return (
+						<div key={cat}>
+							<div style={s.categoryHeader}>{cat}</div>
+							{available.map((suggested) => (
 								<div key={suggested.url} style={s.suggestedItem}>
 									<div style={s.suggestedInfo}>
 										<div style={s.suggestedTitle}>{suggested.title}</div>
 										<div style={s.suggestedDesc}>{suggested.description}</div>
 									</div>
-									{alreadyAdded ? (
-										<span style={{ fontSize: "10px", color: "var(--text-3)", flexShrink: 0 }}>
-											Added
-										</span>
-									) : (
-										<button
-											style={{ ...s.iconBtn, color: "var(--accent)", fontSize: "var(--text-sm)" }}
-											title={`Add ${suggested.title}`}
-											onClick={() => addFeed(suggested.url, suggested.category, suggested.title)}
-										>
-											+
-										</button>
-									)}
+									<button
+										style={{ ...s.iconBtn, color: "var(--accent)", fontSize: "var(--text-sm)" }}
+										title={`Add ${suggested.title}`}
+										onClick={() => addFeed(suggested.url, suggested.category, suggested.title, { stayInView: true })}
+									>
+										+
+									</button>
 								</div>
-							);
-						})}
+							))}
+						</div>
+					);
+				})}
+				{SUGGESTED_FEEDS.every((f) => existingUrls.has(f.url)) && (
+					<div style={s.empty}>
+						<div>All suggested feeds have been added</div>
 					</div>
-				))}
+				)}
 			</div>
 		</>
 	);
@@ -625,7 +627,7 @@ function ImportExportView() {
 			</div>
 			<div style={s.form}>
 				<div style={s.label}>Export OPML</div>
-				<p style={{ margin: 0, fontSize: "10px", color: "var(--text-3)" }}>
+				<p style={{ margin: 0, fontSize: "var(--text-sm)", color: "var(--text-3)" }}>
 					Copy your feed subscriptions as OPML to import into other readers.
 				</p>
 				<button
@@ -642,7 +644,7 @@ function ImportExportView() {
 				<div style={{ borderTop: "1px solid var(--border)", margin: "8px 0" }} />
 
 				<div style={s.label}>Import OPML</div>
-				<p style={{ margin: 0, fontSize: "10px", color: "var(--text-3)" }}>
+				<p style={{ margin: 0, fontSize: "var(--text-sm)", color: "var(--text-3)" }}>
 					Paste OPML content below or import from clipboard.
 				</p>
 				<textarea
