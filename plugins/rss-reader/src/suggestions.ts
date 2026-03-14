@@ -34,6 +34,14 @@ export const SUGGESTED_FEEDS: SuggestedFeed[] = [
 	{ title: "Krebs on Security", url: "https://krebsonsecurity.com/feed/", description: "Investigative cybersecurity journalism", category: "Security" },
 	{ title: "Schneier on Security", url: "https://www.schneier.com/feed/", description: "Security commentary and analysis", category: "Security" },
 
+	// AI & Machine Learning
+	{ title: "OpenAI Blog", url: "https://openai.com/blog/rss.xml", description: "Research and product updates from OpenAI", category: "AI & ML" },
+	{ title: "Anthropic Research", url: "https://www.anthropic.com/research/rss.xml", description: "AI safety and research from Anthropic", category: "AI & ML" },
+	{ title: "Google AI Blog", url: "https://blog.google/technology/ai/rss", description: "AI research and applications from Google", category: "AI & ML" },
+	{ title: "Hugging Face Blog", url: "https://huggingface.co/blog/feed.xml", description: "Open-source ML models and tools", category: "AI & ML" },
+	{ title: "The Batch (deeplearning.ai)", url: "https://www.deeplearning.ai/the-batch/feed/", description: "Andrew Ng's weekly AI newsletter", category: "AI & ML" },
+	{ title: "MIT Technology Review - AI", url: "https://www.technologyreview.com/topic/artificial-intelligence/feed", description: "AI coverage from MIT Tech Review", category: "AI & ML" },
+
 	// DevOps / Infra
 	{ title: "Kubernetes Blog", url: "https://kubernetes.io/feed.xml", description: "Official Kubernetes blog", category: "DevOps" },
 ];
