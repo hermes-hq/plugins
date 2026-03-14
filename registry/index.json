@@ -140,6 +140,36 @@
           ]
         }
       ]
+    },
+    {
+      "id": "hermes-hq.rss-reader",
+      "name": "RSS Feed Reader",
+      "version": "1.0.0",
+      "description": "Subscribe to RSS and Atom feeds, browse articles, and get notified of new content without leaving the terminal",
+      "author": "Hermes IDE",
+      "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"6\" cy=\"19\" r=\"2\" fill=\"currentColor\"/><path d=\"M4 13a8 8 0 0 1 8 8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/><path d=\"M4 7a14 14 0 0 1 14 14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>",
+      "category": "Productivity",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/rss-reader-v1.0.0/hermes-hq.rss-reader-1.0.0.tgz",
+      "minAppVersion": "0.6.0",
+      "permissions": [
+        "network",
+        "storage",
+        "clipboard.read",
+        "clipboard.write"
+      ],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-03-13",
+          "changes": [
+            "Initial release with RSS and Atom feed support",
+            "Curated suggested feeds for developers",
+            "Status bar unread count",
+            "OPML import and export",
+            "Configurable auto-refresh interval"
+          ]
+        }
+      ]
     }
   ]
 }
