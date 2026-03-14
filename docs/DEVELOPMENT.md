@@ -41,25 +41,30 @@ cp -r . ~/.config/com.hermes-ide.terminal/plugins/your-name.my-plugin/
 # 7. Restart Hermes IDE to load the plugin
 ```
 
-## Dev Workflow with Symlink (Recommended)
+## Dev Workflow (Recommended)
 
-Instead of copying files after every build, create a symlink for faster iteration:
+After building your plugin, copy it to the Hermes IDE plugins directory:
 
 ```bash
+# Build
+npm run build
+
 # macOS:
-ln -s $(pwd) ~/Library/Application\ Support/com.hermes-ide.terminal/plugins/your-name.my-plugin
+cp -r . ~/Library/Application\ Support/com.hermes-ide.terminal/plugins/your-name.my-plugin/
 
 # Linux:
-ln -s $(pwd) ~/.config/com.hermes-ide.terminal/plugins/your-name.my-plugin
+cp -r . ~/.config/com.hermes-ide.terminal/plugins/your-name.my-plugin/
 
-# Windows (PowerShell, run as Administrator):
-# New-Item -ItemType SymbolicLink -Path "$env:APPDATA\com.hermes-ide.terminal\plugins\your-name.my-plugin" -Target (Get-Location)
+# Windows:
+# Copy to %APPDATA%/com.hermes-ide.terminal/plugins/your-name.my-plugin/
 ```
 
-Then use watch mode during development:
+> **Note:** Symlinks are not supported — the Tauri backend rejects them as directory traversal for security reasons. Always copy the plugin directory.
+
+For faster iteration, use a build-and-copy script:
 
 ```bash
-npm run dev  # Rebuilds on every file save
+npm run build && cp -r . ~/Library/Application\ Support/com.hermes-ide.terminal/plugins/your-name.my-plugin/
 ```
 
 Restart Hermes IDE after each rebuild to see your changes.

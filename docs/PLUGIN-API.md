@@ -6,7 +6,7 @@ Every plugin receives a `HermesPluginAPI` object when its `activate()` function 
 
 ```typescript
 export function activate(api: HermesPluginAPI) {
-  // api.ui       — UI operations (panels, toasts, status bar)
+  // api.ui       — UI operations (panels, toasts, status bar, session action badges)
   // api.commands  — Command registration and execution
   // api.clipboard — Clipboard access (requires permissions)
   // api.storage   — Persistent key-value storage (requires permission)
@@ -130,6 +130,31 @@ api.ui.updateStatusBarItem("my-plugin.status", {
   tooltip: "My Plugin is active",
   visible: true,
 });
+```
+
+### `api.ui.updateSessionActionBadge(actionId, badge)`
+
+Update the badge shown on a session action button. Requires a `sessionActions` entry in the manifest.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `actionId` | `string` | Must match an ID in `contributes.sessionActions` |
+| `badge.text` | `string` (optional) | Badge text (reserved for future use) |
+| `badge.count` | `number` (optional) | Badge count — displayed as a number on the button. Set to `0` to hide. |
+
+> **Availability:** Hermes IDE 0.6.0+. For backward compatibility, guard the call:
+> ```typescript
+> if (typeof api.ui.updateSessionActionBadge === "function") {
+>   api.ui.updateSessionActionBadge("my-action", { count: 5 });
+> }
+> ```
+
+```typescript
+// Show a badge with count
+api.ui.updateSessionActionBadge("my-plugin-action", { count: 3 });
+
+// Hide the badge
+api.ui.updateSessionActionBadge("my-plugin-action", { count: 0 });
 ```
 
 ---

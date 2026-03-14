@@ -13,7 +13,7 @@ The `hermes-plugin.json` file is the plugin's manifest. It declares metadata, ca
 | `author` | string | Yes | Author name |
 | `main` | string | No | Path to IIFE bundle (default: `"dist/index.js"`) |
 | `activationEvents` | array | Yes | When the plugin should activate |
-| `contributes` | object | Yes | What the plugin provides (commands, panels, status bar items) |
+| `contributes` | object | Yes | What the plugin provides (commands, panels, session actions, status bar items) |
 | `permissions` | array | No | Required permissions (default: `[]`) |
 
 ---
@@ -99,6 +99,59 @@ Example icon:
 ```json
 "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"12\" height=\"12\" rx=\"2\"/><path d=\"M7 9h4\"/></svg>"
 ```
+
+### Session Actions
+
+Session actions place a button in the per-session sub-view toolbar (next to the built-in Git, Files, and Search buttons). When clicked, the button toggles a panel open/closed. Session actions also support badges (e.g., to show a count).
+
+A session action **must reference a panel** declared in `contributes.panels`. The panel provides the component; the session action provides the button placement.
+
+> **Requires Hermes IDE 0.6.0+.** For backward compatibility with older versions, also declare the panel in `contributes.panels` and optionally include a `contributes.statusBarItems` entry as a fallback. The host app will automatically hide the panel from the ActivityBar when a session action references it.
+
+```json
+"contributes": {
+  "panels": [
+    {
+      "id": "my-plugin-panel",
+      "name": "My Plugin",
+      "side": "left",
+      "icon": "<svg>...</svg>"
+    }
+  ],
+  "sessionActions": [
+    {
+      "id": "my-plugin-action",
+      "panelId": "my-plugin-panel",
+      "name": "My Plugin",
+      "icon": "<svg>...</svg>"
+    }
+  ]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string | Yes | Unique action ID |
+| `panelId` | string | Yes | References a panel ID from `contributes.panels` |
+| `name` | string | Yes | Tooltip label shown on hover |
+| `icon` | string | Yes | Inline SVG string for the button icon |
+
+**Icon guidelines:**
+- Recommended size: `width="14" height="14"` to match the built-in sub-view buttons.
+- Use `currentColor` for `stroke` and/or `fill`.
+- The `viewBox` can be any size (e.g., `0 0 18 18`), the width/height attributes control display size.
+
+**Badge updates at runtime:**
+
+Use `api.ui.updateSessionActionBadge()` to show a count on the button:
+
+```typescript
+api.ui.updateSessionActionBadge("my-plugin-action", { count: 5 });
+```
+
+Set `count: 0` to hide the badge.
+
+---
 
 ### Status Bar Items
 

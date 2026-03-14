@@ -17,6 +17,7 @@ interface HermesPluginAPI {
 		togglePanel(panelId: string): void;
 		showToast(message: string, options?: { type?: "info" | "success" | "warning" | "error"; duration?: number }): void;
 		updateStatusBarItem(itemId: string, update: { text?: string; tooltip?: string; visible?: boolean }): void;
+		updateSessionActionBadge(actionId: string, badge: { text?: string; count?: number }): void;
 	};
 	commands: {
 		register(commandId: string, handler: () => void | Promise<void>): Disposable;
@@ -128,16 +129,25 @@ async function loadNoteForSession(sessionId: string, sessionName: string) {
 			const stored = await api.storage.get(storageKey(sessionId));
 			currentNote = stored ?? "";
 		} catch { /* ok */ }
-		updateStatusBar();
+		updateBadge();
 	}
 
 	notifyListeners();
 }
 
-function updateStatusBar() {
+function updateBadge() {
 	if (!api) return;
 	const lines = currentNote ? currentNote.split("\n").length : 0;
 	const hasContent = currentNote.trim().length > 0;
+
+	// Session action badge (new h-ide with sessionActions support)
+	if (typeof api.ui.updateSessionActionBadge === "function") {
+		api.ui.updateSessionActionBadge("session-notes-action", {
+			count: hasContent ? lines : 0,
+		});
+	}
+
+	// Status bar fallback (older h-ide without sessionActions)
 	const text = hasContent ? `Notes (${lines}L)` : "Notes";
 	const tooltip = activeSessionName
 		? `Notes for "${activeSessionName}" — Click to open`
@@ -148,7 +158,7 @@ function updateStatusBar() {
 export function updateNote(text: string) {
 	currentNote = text;
 	scheduleSave();
-	updateStatusBar();
+	updateBadge();
 	notifyListeners();
 }
 
@@ -158,7 +168,7 @@ export async function clearNote() {
 	try {
 		await api.storage.delete(storageKey(activeSessionId));
 	} catch { /* ok */ }
-	updateStatusBar();
+	updateBadge();
 	notifyListeners();
 	api.ui.showToast("Note cleared", { type: "info", duration: 1500 });
 }
@@ -189,7 +199,7 @@ export async function activate(pluginApi: HermesPluginAPI) {
 	api.subscriptions.push(
 		api.settings.onDidChange("showLineCount", (v) => {
 			showLineCount = v !== false;
-			updateStatusBar();
+			updateBadge();
 			notifyListeners();
 		})
 	);
@@ -228,7 +238,7 @@ export async function activate(pluginApi: HermesPluginAPI) {
 						activeSessionId = null;
 						activeSessionName = "";
 						currentNote = "";
-						updateStatusBar();
+						updateBadge();
 						notifyListeners();
 					}
 				} catch { /* ok */ }
@@ -249,7 +259,7 @@ export async function activate(pluginApi: HermesPluginAPI) {
 		api.commands.register("notes.clear", () => clearNote())
 	);
 
-	updateStatusBar();
+	updateBadge();
 }
 
 export function deactivate() {

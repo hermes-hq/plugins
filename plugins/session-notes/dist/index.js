@@ -200,14 +200,19 @@ var __hermes_plugin__ = function(exports, React2) {
         currentNote = stored ?? "";
       } catch {
       }
-      updateStatusBar();
+      updateBadge();
     }
     notifyListeners();
   }
-  function updateStatusBar() {
+  function updateBadge() {
     if (!api) return;
     const lines = currentNote ? currentNote.split("\n").length : 0;
     const hasContent = currentNote.trim().length > 0;
+    if (typeof api.ui.updateSessionActionBadge === "function") {
+      api.ui.updateSessionActionBadge("session-notes-action", {
+        count: hasContent ? lines : 0
+      });
+    }
     const text = hasContent ? `Notes (${lines}L)` : "Notes";
     const tooltip = activeSessionName ? `Notes for "${activeSessionName}" — Click to open` : "Session Notes — Click to open";
     api.ui.updateStatusBarItem("notes.status", { text, tooltip });
@@ -215,7 +220,7 @@ var __hermes_plugin__ = function(exports, React2) {
   function updateNote(text) {
     currentNote = text;
     scheduleSave();
-    updateStatusBar();
+    updateBadge();
     notifyListeners();
   }
   async function clearNote() {
@@ -225,7 +230,7 @@ var __hermes_plugin__ = function(exports, React2) {
       await api.storage.delete(storageKey(activeSessionId));
     } catch {
     }
-    updateStatusBar();
+    updateBadge();
     notifyListeners();
     api.ui.showToast("Note cleared", { type: "info", duration: 1500 });
   }
@@ -252,7 +257,7 @@ var __hermes_plugin__ = function(exports, React2) {
     api.subscriptions.push(
       api.settings.onDidChange("showLineCount", (v) => {
         showLineCount = v !== false;
-        updateStatusBar();
+        updateBadge();
         notifyListeners();
       })
     );
@@ -286,7 +291,7 @@ var __hermes_plugin__ = function(exports, React2) {
               activeSessionId = null;
               activeSessionName = "";
               currentNote = "";
-              updateStatusBar();
+              updateBadge();
               notifyListeners();
             }
           } catch {
@@ -303,7 +308,7 @@ var __hermes_plugin__ = function(exports, React2) {
     api.subscriptions.push(
       api.commands.register("notes.clear", () => clearNote())
     );
-    updateStatusBar();
+    updateBadge();
   }
   function deactivate() {
     if (saveTimer !== null) {
