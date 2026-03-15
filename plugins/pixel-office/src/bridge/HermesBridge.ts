@@ -140,10 +140,15 @@ export class HermesBridge {
         if (!currentIds.has(session.id)) {
           this.onSessionCreated(session);
         } else {
-          // Always update phase for existing sessions (JSONL adds granularity on top)
+          // Always update phase and name for existing sessions
           const agentId = this.sessionToAgentId.get(session.id);
           if (agentId !== undefined) {
             this.onPhaseChanged(session.id, session.phase);
+            // Update name if it changed (e.g. user renamed the session)
+            const ch = this.officeState.characters.get(agentId);
+            if (ch && ch.folderName !== session.name) {
+              ch.folderName = session.name;
+            }
           }
         }
       }
