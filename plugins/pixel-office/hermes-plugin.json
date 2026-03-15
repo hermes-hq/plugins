@@ -5,6 +5,9 @@
   "description": "Visualize AI coding agents as animated pixel art characters in a virtual office",
   "author": "Hermes HQ",
   "main": "dist/index.js",
+  "engines": {
+    "hermes": ">=0.5.11"
+  },
   "activationEvents": [
     { "type": "onStartup" }
   ],
