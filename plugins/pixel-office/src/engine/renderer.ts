@@ -479,6 +479,97 @@ export function renderRotateButton(
 
 // ── Speech bubbles ──────────────────────────────────────────────
 
+/** Render session name labels above each character */
+function renderNameLabels(
+  ctx: CanvasRenderingContext2D,
+  characters: Character[],
+  offsetX: number,
+  offsetY: number,
+  zoom: number,
+): void {
+  for (const ch of characters) {
+    if (!ch.folderName && !ch.id) continue;
+    if (ch.matrixEffect) continue; // Don't show names during spawn/despawn
+
+    const label = ch.folderName || `Agent ${ch.id}`;
+    const sittingOff = ch.state === CharacterState.TYPE ? CHARACTER_SITTING_OFFSET_PX : 0;
+    const labelX = Math.round(offsetX + ch.x * zoom);
+    const labelY = Math.round(
+      offsetY + (ch.y + sittingOff) * zoom - 32 * zoom - 4 * zoom,
+    );
+
+    ctx.save();
+    const fontSize = Math.max(8, Math.round(zoom * 4));
+    ctx.font = `bold ${fontSize}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+
+    // Background pill
+    const metrics = ctx.measureText(label);
+    const padX = 3 * zoom;
+    const padY = 1.5 * zoom;
+    const bgX = labelX - metrics.width / 2 - padX;
+    const bgY = labelY - fontSize - padY;
+    const bgW = metrics.width + padX * 2;
+    const bgH = fontSize + padY * 2;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.beginPath();
+    const r = Math.max(2, zoom);
+    ctx.roundRect(bgX, bgY, bgW, bgH, r);
+    ctx.fill();
+
+    // Text
+    ctx.fillStyle = '#ffffff';
+    ctx.globalAlpha = 0.9;
+    ctx.fillText(label, labelX, labelY);
+    ctx.restore();
+  }
+}
+
+/** Render a day/night lighting overlay based on real system time */
+function renderDayNightOverlay(
+  ctx: CanvasRenderingContext2D,
+  canvasWidth: number,
+  canvasHeight: number,
+): void {
+  const hour = new Date().getHours();
+  const minute = new Date().getMinutes();
+  const time = hour + minute / 60;
+
+  // Define light levels throughout the day
+  let overlayColor: string;
+  let overlayAlpha: number;
+
+  if (time >= 6 && time < 8) {
+    // Dawn: warm golden light fading in
+    const t = (time - 6) / 2;
+    overlayColor = `rgba(255, 200, 100, ${0.15 * (1 - t)})`;
+    overlayAlpha = 0;
+  } else if (time >= 8 && time < 17) {
+    // Daytime: no overlay (bright)
+    return;
+  } else if (time >= 17 && time < 19) {
+    // Sunset: warm orange tint
+    const t = (time - 17) / 2;
+    overlayColor = `rgba(255, 140, 50, ${0.08 + t * 0.12})`;
+    overlayAlpha = 0;
+  } else if (time >= 19 && time < 21) {
+    // Dusk: blue tint increasing
+    const t = (time - 19) / 2;
+    overlayAlpha = 0.1 + t * 0.15;
+    overlayColor = `rgba(20, 30, 80, ${overlayAlpha})`;
+  } else {
+    // Night: dark blue overlay
+    overlayAlpha = 0.25;
+    overlayColor = `rgba(10, 15, 50, ${overlayAlpha})`;
+  }
+
+  ctx.save();
+  ctx.fillStyle = overlayColor;
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  ctx.restore();
+}
+
 export function renderBubbles(
   ctx: CanvasRenderingContext2D,
   characters: Character[],
@@ -617,6 +708,12 @@ export function renderFrame(
 
   // Speech bubbles (always on top of characters)
   renderBubbles(ctx, characters, offsetX, offsetY, zoom);
+
+  // Session name labels above characters
+  renderNameLabels(ctx, characters, offsetX, offsetY, zoom);
+
+  // Day/night ambient lighting
+  renderDayNightOverlay(ctx, canvasWidth, canvasHeight);
 
   // Editor overlays
   if (editor) {
