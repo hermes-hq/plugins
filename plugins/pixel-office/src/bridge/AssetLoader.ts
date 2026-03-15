@@ -1,9 +1,8 @@
 /**
  * Browser-side asset loader.
  *
- * In pixel-agents, PNGs are decoded in Node.js using pngjs and sent to the
- * webview as SpriteData (string[][]). Since Hermes plugins run entirely in the
- * browser, we decode PNGs in the browser using Image + Canvas getImageData.
+ * Pixel Office browser-side asset loader.
+ * Decodes PNGs in the browser using Image + Canvas getImageData.
  *
  * For the plugin IIFE bundle, assets are embedded as base64 data URLs at build
  * time (see scripts/encode-assets.ts). At runtime, we decode them here.
@@ -11,7 +10,7 @@
 
 import type { SpriteData } from "../office/types";
 
-// ── Constants matching pixel-agents' asset loader ──
+// ── Asset loading constants ──
 
 const CHAR_COUNT = 6;
 const CHAR_FRAME_W = 16;

@@ -23,7 +23,7 @@ interface Disposable {
 }
 
 /**
- * Maps tool names from JSONL transcripts to pixel-agents tool categories.
+ * Maps tool names from JSONL transcripts to Pixel Office tool categories.
  * The OfficeState uses these to pick the right animation (typing vs reading).
  */
 function mapToolName(toolName: string): string | null {

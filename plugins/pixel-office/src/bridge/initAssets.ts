@@ -1,8 +1,8 @@
 /**
  * Initializes the rendering engine with the encoded assets.
  *
- * This is the browser equivalent of pixel-agents' assetLoader.ts +
- * the webviewReady message flow. It decodes base64 PNGs to SpriteData
+ * Initializes the rendering engine with the encoded assets.
+ * Decodes base64 PNGs to SpriteData
  * and registers them with the engine's sprite systems.
  */
 
