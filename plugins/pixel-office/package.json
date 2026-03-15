@@ -1,0 +1,21 @@
+{
+  "name": "@hermes-hq/plugin-pixel-office",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prebuild": "node scripts/encode-assets.js",
+    "build": "vite build",
+    "dev": "node scripts/encode-assets.js && vite build --watch",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "typescript": "^5.4.0",
+    "vite": "^5.4.0",
+    "vitest": "^3.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}
