@@ -183,6 +183,7 @@ var __hermes_plugin__ = function(exports, React2) {
     },
     select: {
       flex: 1,
+      minWidth: 0,
       background: "var(--bg-2)",
       border: "1px solid var(--border)",
       borderRadius: "var(--radius)",
@@ -195,6 +196,7 @@ var __hermes_plugin__ = function(exports, React2) {
     },
     input: {
       flex: 1,
+      minWidth: 0,
       background: "var(--bg-2)",
       border: "1px solid var(--border)",
       borderRadius: "var(--radius)",

@@ -53,6 +53,7 @@ const s = {
 	},
 	select: {
 		flex: 1,
+		minWidth: 0,
 		background: "var(--bg-2)",
 		border: "1px solid var(--border)",
 		borderRadius: "var(--radius)",
@@ -65,6 +66,7 @@ const s = {
 	},
 	input: {
 		flex: 1,
+		minWidth: 0,
 		background: "var(--bg-2)",
 		border: "1px solid var(--border)",
 		borderRadius: "var(--radius)",
