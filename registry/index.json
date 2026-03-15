@@ -35,17 +35,24 @@
     {
       "id": "hermes-hq.uuid-generator",
       "name": "UUID Generator",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Generate UUIDs in all standard versions (v1, v4, v5, v7) with batch support",
       "author": "Hermes IDE",
       "icon": "<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><path d=\"M8 8h2M14 8h2M8 12h8M8 16h4\"/></svg>",
       "category": "Utilities",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/uuid-generator-v1.0.0/hermes-hq.uuid-generator-1.0.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/uuid-generator-v1.0.1/hermes-hq.uuid-generator-1.0.1.tgz",
       "minAppVersion": "0.3.0",
       "permissions": [
         "clipboard.write"
       ],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-03-15",
+          "changes": [
+            "Fixed select and input fields overflowing the sidebar panel width"
+          ]
+        },
         {
           "version": "1.0.0",
           "date": "2026-03-01",
