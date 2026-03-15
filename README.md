@@ -92,6 +92,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for full details and review criteria.
 | [Session Notes](./plugins/session-notes) | Markdown scratchpad for each terminal session with auto-save and session-aware switching |
 | [Regex Tester](./plugins/regex-tester) | Test regular expressions with live match highlighting, capture groups, and common presets |
 | [RSS Feed Reader](./plugins/rss-reader) | Subscribe to RSS and Atom feeds, browse articles, and get notified of new content without leaving the terminal |
+| [Pixel Office](./plugins/pixel-office) | Visualize AI coding agents as animated pixel art characters in a virtual office |
 
 ## License
 
