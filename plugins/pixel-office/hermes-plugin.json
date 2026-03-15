@@ -1,0 +1,58 @@
+{
+  "id": "hermes-hq.pixel-office",
+  "name": "Pixel Office",
+  "version": "0.1.0",
+  "description": "Visualize AI coding agents as animated pixel art characters in a virtual office",
+  "author": "Hermes HQ",
+  "main": "dist/index.js",
+  "engines": {
+    "hermes": ">=0.5.11"
+  },
+  "activationEvents": [
+    { "type": "onStartup" }
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "hermes-hq.pixel-office.toggle",
+        "title": "Toggle Pixel Office",
+        "category": "Pixel Office"
+      }
+    ],
+    "panels": [
+      {
+        "id": "pixel-office-panel",
+        "name": "Pixel Office",
+        "side": "bottom",
+        "icon": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='14' height='11' rx='1'/><path d='M5 4V3a1 1 0 011-1h6a1 1 0 011 1v1'/><line x1='2' y1='9' x2='16' y2='9'/><rect x='7' y='6' width='4' height='3' rx='0.5'/><line x1='6' y1='12' x2='6' y2='13'/><line x1='12' y1='12' x2='12' y2='13'/></svg>"
+      }
+    ],
+    "settings": [
+      {
+        "key": "soundEnabled",
+        "type": "boolean",
+        "default": true,
+        "title": "Sound Notifications",
+        "description": "Play a chime when an agent finishes its turn"
+      },
+      {
+        "key": "showBranchLabels",
+        "type": "boolean",
+        "default": true,
+        "title": "Branch Labels",
+        "description": "Show git branch labels on desks"
+      },
+      {
+        "key": "showToolStatus",
+        "type": "boolean",
+        "default": true,
+        "title": "Tool Status",
+        "description": "Show current tool name above active agents"
+      }
+    ]
+  },
+  "permissions": [
+    "storage",
+    "sessions.read"
+  ]
+}
