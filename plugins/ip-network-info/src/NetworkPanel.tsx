@@ -1,7 +1,8 @@
 import * as React from "react";
 import {
 	getState, subscribe, fetchPublicIp, dnsLookup, whoisLookup,
-	copyToClipboard, type NetworkState,
+	copyToClipboard, fetchInterfaces, runPing, runTraceroute,
+	hasShellExec, type NetworkState,
 } from "./activate";
 
 const s = {
@@ -179,7 +180,7 @@ const s = {
 	},
 };
 
-type Tab = "ip" | "dns" | "whois";
+type Tab = "ip" | "local" | "dns" | "whois" | "ping";
 
 const DNS_TYPES = ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SOA", "SRV"];
 
@@ -189,6 +190,8 @@ export function NetworkPanel() {
 	const [dnsQuery, setDnsQuery] = React.useState("");
 	const [dnsType, setDnsType] = React.useState("A");
 	const [whoisQuery, setWhoisQuery] = React.useState("");
+	const [pingHost, setPingHost] = React.useState("");
+	const shellAvailable = hasShellExec();
 
 	React.useEffect(() => {
 		return subscribe(() => setState(getState()));
@@ -204,22 +207,33 @@ export function NetworkPanel() {
 		if (q) whoisLookup(q);
 	};
 
+	const tabs: { id: Tab; label: string; needsShell?: boolean }[] = [
+		{ id: "ip", label: "Public IP" },
+		{ id: "local", label: "Local", needsShell: true },
+		{ id: "dns", label: "DNS" },
+		{ id: "whois", label: "WHOIS" },
+		{ id: "ping", label: "Ping", needsShell: true },
+	];
+	const visibleTabs = tabs.filter((t) => !t.needsShell || shellAvailable);
+
 	return (
 		React.createElement("div", { style: s.root },
 			React.createElement("div", { style: s.tabs },
-				(["ip", "dns", "whois"] as Tab[]).map((t) =>
+				visibleTabs.map((t) =>
 					React.createElement("button", {
-						key: t,
-						style: { ...s.tab, ...(tab === t ? s.tabActive : {}) },
-						onClick: () => setTab(t),
-					}, t === "ip" ? "Public IP" : t.toUpperCase())
+						key: t.id,
+						style: { ...s.tab, ...(tab === t.id ? s.tabActive : {}) },
+						onClick: () => setTab(t.id),
+					}, t.label)
 				)
 			),
 
 			React.createElement("div", { style: s.content },
 				tab === "ip" && renderIpTab(state),
+				tab === "local" && renderLocalTab(state),
 				tab === "dns" && renderDnsTab(state, dnsQuery, setDnsQuery, dnsType, setDnsType, handleDnsLookup),
 				tab === "whois" && renderWhoisTab(state, whoisQuery, setWhoisQuery, handleWhoisLookup),
+				tab === "ping" && renderPingTab(state, pingHost, setPingHost),
 			)
 		)
 	);
@@ -355,6 +369,88 @@ function renderWhoisTab(
 			React.createElement("button", {
 				style: { ...s.copyBtn, position: "absolute" as const, top: "4px", right: "4px" },
 				onClick: () => copyToClipboard(state.whoisResult!.raw),
+			}, "Copy"),
+		),
+	);
+}
+
+function renderLocalTab(state: NetworkState) {
+	if (state.interfacesLoading) {
+		return React.createElement("span", { style: s.loading }, "Scanning network interfaces...");
+	}
+
+	if (state.interfacesError) {
+		return React.createElement("div", { style: s.section },
+			React.createElement("span", { style: s.error }, state.interfacesError),
+			React.createElement("button", { style: s.btnSecondary, onClick: fetchInterfaces }, "Retry"),
+		);
+	}
+
+	return React.createElement("div", { style: s.section },
+		React.createElement("div", {
+			style: { display: "flex", alignItems: "center", justifyContent: "space-between" },
+		},
+			React.createElement("span", { style: s.sectionTitle }, "Network Interfaces"),
+			React.createElement("button", { style: s.btnSecondary, onClick: fetchInterfaces }, "Refresh"),
+		),
+		state.interfaces.length > 0
+			? React.createElement("div", {
+				style: { display: "flex", flexDirection: "column" as const, gap: "4px" },
+			},
+				...state.interfaces.map((iface, i) =>
+					React.createElement("div", { style: s.recordRow, key: i },
+						React.createElement("span", { style: s.recordType }, iface.name),
+						React.createElement("span", { style: s.recordValue }, iface.ip),
+						React.createElement("span", { style: s.recordTtl }, iface.type),
+						React.createElement("button", {
+							style: s.copyBtn,
+							onClick: () => copyToClipboard(iface.ip),
+							title: "Copy",
+						}, "Copy"),
+					)
+				)
+			)
+			: React.createElement("span", { style: s.loading }, "No interfaces found"),
+	);
+}
+
+function renderPingTab(
+	state: NetworkState,
+	host: string,
+	setHost: (v: string) => void,
+) {
+	const handlePing = () => { if (host.trim()) runPing(host.trim()); };
+	const handleTraceroute = () => { if (host.trim()) runTraceroute(host.trim()); };
+
+	return React.createElement("div", { style: s.section },
+		React.createElement("span", { style: s.sectionTitle }, "Ping & Traceroute"),
+		React.createElement("div", { style: s.inputRow },
+			React.createElement("input", {
+				style: { ...s.input, flex: 1 },
+				value: host,
+				onChange: (e: React.ChangeEvent<HTMLInputElement>) => setHost(e.target.value),
+				placeholder: "google.com or 8.8.8.8",
+				onKeyDown: (e: React.KeyboardEvent) => { if (e.key === "Enter") handlePing(); },
+			}),
+			React.createElement("button", {
+				style: s.btn,
+				onClick: handlePing,
+				disabled: !host.trim() || state.pingLoading,
+			}, state.pingLoading ? "..." : "Ping"),
+			React.createElement("button", {
+				style: s.btnSecondary,
+				onClick: handleTraceroute,
+				disabled: !host.trim() || state.pingLoading,
+			}, "Traceroute"),
+		),
+
+		state.pingError && React.createElement("span", { style: s.error }, state.pingError),
+
+		state.pingResult && React.createElement("div", { style: { position: "relative" as const } },
+			React.createElement("pre", { style: s.pre }, state.pingResult.output),
+			React.createElement("button", {
+				style: { ...s.copyBtn, position: "absolute" as const, top: "4px", right: "4px" },
+				onClick: () => copyToClipboard(state.pingResult!.output),
 			}, "Copy"),
 		),
 	);
