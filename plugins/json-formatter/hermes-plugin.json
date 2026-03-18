@@ -93,6 +93,7 @@
   },
   "permissions": [
     "clipboard.read",
-    "clipboard.write"
+    "clipboard.write",
+    "storage"
   ]
 }

@@ -195,9 +195,14 @@ Declare the permissions your plugin requires. See the [Plugin API Reference](./P
 |-----------|------------------|
 | `clipboard.read` | `api.clipboard.readText()` |
 | `clipboard.write` | `api.clipboard.writeText()` |
-| `storage` | `api.storage.get()`, `api.storage.set()`, `api.storage.delete()` |
+| `storage` | `api.storage.*`, `api.settings.*` |
+| `notifications` | `api.notifications.send()` |
+| `sessions.read` | `api.sessions.*`, `api.agents.*` |
+| `network` | `api.network.fetch()`, `api.shell.openExternal()` |
 
 Only request permissions your plugin actually uses. Unnecessary permissions will be flagged during review.
+
+> **Note:** If your plugin declares a `contributes.settings` schema, the `"storage"` permission is auto-granted. You don't need to list it explicitly, but it's good practice to include it for clarity.
 
 ---
 

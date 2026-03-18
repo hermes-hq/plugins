@@ -6,10 +6,17 @@ Every plugin receives a `HermesPluginAPI` object when its `activate()` function 
 
 ```typescript
 export function activate(api: HermesPluginAPI) {
-  // api.ui       — UI operations (panels, toasts, status bar, session action badges)
-  // api.commands  — Command registration and execution
-  // api.clipboard — Clipboard access (requires permissions)
-  // api.storage   — Persistent key-value storage (requires permission)
+  // api.ui            — UI operations (panels, toasts, status bar, session action badges)
+  // api.commands      — Command registration and execution
+  // api.clipboard     — Clipboard access (requires permissions)
+  // api.storage       — Persistent key-value storage (requires "storage" permission)
+  // api.settings      — Schema-based plugin settings (requires "storage", auto-granted if settings schema exists)
+  // api.events        — Subscribe to host app events (theme, sessions, window)
+  // api.notifications — Desktop notifications (requires "notifications" permission)
+  // api.network       — HTTP requests (requires "network" permission)
+  // api.shell         — Open URLs in browser (requires "network" permission)
+  // api.sessions      — Terminal session info (requires "sessions.read" permission)
+  // api.agents        — AI agent transcript watching (requires "sessions.read" permission)
   // api.subscriptions — Auto-cleanup array for disposables
 }
 ```
@@ -287,6 +294,222 @@ await api.storage.delete("lastInput");
 
 ---
 
+## `api.settings`
+
+Schema-based settings that appear in the Plugin Manager UI. Settings are persisted via the same storage backend as `api.storage`. **Requires `"storage"` permission**, but this is auto-granted if your plugin declares a `contributes.settings` schema.
+
+### `api.settings.get(key)`
+
+Get a setting's current value. Returns the default from the schema if no value has been stored.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | `string` | Setting key, must match a key in `contributes.settings` |
+
+- **Returns:** `Promise<T>` — the value, coerced to the schema's type (number, boolean, or string)
+
+```typescript
+const indentSize = await api.settings.get<number>("indentSize");
+```
+
+### `api.settings.update(key, value)`
+
+Update a setting. Validates the value against the schema (type, min/max, allowed options).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | `string` | Setting key |
+| `value` | `string \| number \| boolean` | The new value |
+
+- **Returns:** `Promise<void>`
+
+```typescript
+await api.settings.update("indentSize", 4);
+```
+
+### `api.settings.onDidChange(key, callback)`
+
+Subscribe to changes for a specific setting key.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | `string` | Setting key to watch |
+| `callback` | `(newValue) => void` | Called when the value changes |
+
+- **Returns:** `Disposable`
+
+```typescript
+api.subscriptions.push(
+  api.settings.onDidChange("theme", (newTheme) => {
+    console.log("Theme changed to:", newTheme);
+  })
+);
+```
+
+### `api.settings.getAll()`
+
+Get all settings as a flat object with defaults applied for any unset values.
+
+- **Returns:** `Promise<Record<string, string | number | boolean>>`
+
+```typescript
+const all = await api.settings.getAll();
+// { indentSize: 2, sortKeys: false, maxDepth: 0 }
+```
+
+---
+
+## `api.events`
+
+Subscribe to host app events. No permission required.
+
+### `api.events.on(event, callback)`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `event` | `HermesEvent` | Event name (see table below) |
+| `callback` | `(...args) => void` | Event handler |
+
+- **Returns:** `Disposable`
+
+| Event | Description |
+|-------|-------------|
+| `"theme.changed"` | User switched themes |
+| `"session.created"` | A new terminal session was created |
+| `"session.closed"` | A terminal session was closed |
+| `"session.phase_changed"` | A session's phase changed (e.g., idle to running) |
+| `"session.focus_changed"` | User switched to a different session |
+| `"window.focused"` | App window gained focus |
+| `"window.blurred"` | App window lost focus |
+
+```typescript
+api.subscriptions.push(
+  api.events.on("theme.changed", () => {
+    // Re-render with new theme colors
+  })
+);
+```
+
+---
+
+## `api.notifications`
+
+Send desktop notifications. **Requires `"notifications"` permission.**
+
+### `api.notifications.send(options)`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options.title` | `string` | Notification title |
+| `options.body` | `string` (optional) | Notification body text |
+
+- **Returns:** `Promise<void>`
+
+```typescript
+await api.notifications.send({
+  title: "Timer Complete",
+  body: "Your 25-minute focus session is done!",
+});
+```
+
+---
+
+## `api.network`
+
+Make HTTP requests through the Rust backend (bypasses WebView CSP). **Requires `"network"` permission.**
+
+### `api.network.fetch(url)`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `url` | `string` | The URL to fetch |
+
+- **Returns:** `Promise<string>` — the response body as text
+
+```typescript
+const response = await api.network.fetch("https://api.example.com/data.json");
+const data = JSON.parse(response);
+```
+
+---
+
+## `api.shell`
+
+Open URLs in the user's default browser. **Requires `"network"` permission.**
+
+### `api.shell.openExternal(url)`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `url` | `string` | The URL to open |
+
+- **Returns:** `Promise<void>`
+
+```typescript
+await api.shell.openExternal("https://hermes-ide.com");
+```
+
+---
+
+## `api.sessions`
+
+Access terminal session information. **Requires `"sessions.read"` permission.**
+
+### `api.sessions.getActive()`
+
+Get the currently active (focused) session.
+
+- **Returns:** `Promise<SessionInfo | null>`
+
+### `api.sessions.list()`
+
+Get all terminal sessions.
+
+- **Returns:** `Promise<SessionInfo[]>`
+
+### `api.sessions.focus(sessionId)`
+
+Switch focus to a specific session.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `sessionId` | `string` | The session ID to focus |
+
+```typescript
+const active = await api.sessions.getActive();
+if (active) {
+  console.log("Active session:", active.name, active.working_directory);
+}
+```
+
+---
+
+## `api.agents`
+
+Watch AI agent transcripts in real time. **Requires `"sessions.read"` permission.**
+
+### `api.agents.watchTranscript(sessionId, callback)`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `sessionId` | `string` | Session ID to watch |
+| `callback` | `(event) => void` | Called for each transcript event |
+
+- **Returns:** `Promise<Disposable>`
+
+Transcript events have these types: `tool_start`, `tool_end`, `text`, `thinking`, `turn_end`.
+
+```typescript
+const watcher = await api.agents.watchTranscript(sessionId, (event) => {
+  if (event.type === "tool_start") {
+    console.log("Agent using tool:", event.tool_name);
+  }
+});
+api.subscriptions.push(watcher);
+```
+
+---
+
 ## `api.subscriptions`
 
 An array of `Disposable` objects managed by the host app. Any disposable added to this array is automatically disposed when the plugin is deactivated.
@@ -296,9 +519,6 @@ export function activate(api: HermesPluginAPI) {
   // These will be cleaned up automatically on deactivation
   api.subscriptions.push(
     api.commands.register("my-plugin.cmd1", () => { /* ... */ })
-  );
-  api.subscriptions.push(
-    api.commands.register("my-plugin.cmd2", () => { /* ... */ })
   );
   api.subscriptions.push(
     api.ui.registerPanel("my-plugin-panel", MyPanel)
@@ -315,13 +535,21 @@ export function deactivate() {
 
 ## Permissions
 
-Permissions are declared in `hermes-plugin.json` and control access to sensitive APIs.
+Permissions are declared in `hermes-plugin.json` and control access to sensitive APIs. Permissions are enforced at two layers: the frontend API proxy and the Rust backend.
 
 | Permission | Grants access to |
 |-----------|------------------|
+| *(none)* | `api.ui`, `api.commands`, `api.events`, `api.subscriptions` |
 | `clipboard.read` | `api.clipboard.readText()` |
 | `clipboard.write` | `api.clipboard.writeText()` |
-| `storage` | `api.storage.get()`, `api.storage.set()`, `api.storage.delete()` |
+| `storage` | `api.storage.*`, `api.settings.*` |
+| `notifications` | `api.notifications.send()` |
+| `sessions.read` | `api.sessions.*`, `api.agents.*` |
+| `network` | `api.network.fetch()`, `api.shell.openExternal()` |
+
+### Auto-granted Permissions
+
+If your plugin declares a `contributes.settings` schema, the `"storage"` permission is automatically granted — you don't need to list it explicitly. However, it's good practice to declare it anyway for clarity.
 
 ### Declaring Permissions
 
@@ -338,5 +566,9 @@ Attempting to use an API without the required permission throws a `PermissionDen
 ```typescript
 // If "clipboard.read" is not in permissions:
 await api.clipboard.readText();
-// Throws: PermissionDeniedError: Plugin "my-plugin" lacks permission "clipboard.read"
+// Throws: PermissionDeniedError: Plugin "my-plugin" requires permission "clipboard.read" which was not granted.
 ```
+
+### Install Confirmation
+
+When a user installs a plugin that requests permissions, a confirmation dialog is shown listing each permission with a description. Users must approve before installation proceeds.

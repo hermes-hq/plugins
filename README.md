@@ -60,7 +60,7 @@ your-plugin-id/
 | `main` | string | Path to the IIFE bundle (relative to plugin dir) |
 | `activationEvents` | array | When the plugin should be activated |
 | `contributes` | object | What the plugin provides (commands, panels, status bar items) |
-| `permissions` | array | Required permissions |
+| `permissions` | array | Required permissions (`storage`, `network`, `clipboard.read`, `clipboard.write`, `notifications`, `sessions.read`) |
 
 ### Build Configuration
 

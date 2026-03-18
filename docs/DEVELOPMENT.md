@@ -201,12 +201,29 @@ export function activate(api: HermesPluginAPI) {
     })
   );
 
-  // Use persistent storage (requires permission)
+  // Use persistent storage (requires "storage" permission)
   api.subscriptions.push(
     api.commands.register("my-plugin.save", async () => {
       await api.storage.set("lastInput", "some value");
     })
   );
+
+  // Use settings (requires "storage" permission, auto-granted if settings schema exists)
+  const all = await api.settings.getAll();
+  api.subscriptions.push(
+    api.settings.onDidChange("theme", (newValue) => {
+      console.log("Theme setting changed:", newValue);
+    })
+  );
+
+  // Make network requests (requires "network" permission)
+  const data = await api.network.fetch("https://api.example.com/data");
+
+  // Send notifications (requires "notifications" permission)
+  await api.notifications.send({ title: "Done!", body: "Task completed." });
+
+  // Access session info (requires "sessions.read" permission)
+  const active = await api.sessions.getActive();
 }
 ```
 
