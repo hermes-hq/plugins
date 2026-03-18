@@ -6,51 +6,87 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   # json-formatter plugin
   - package-ecosystem: "npm"
     directory: "/plugins/json-formatter"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   # pixel-office plugin
   - package-ecosystem: "npm"
     directory: "/plugins/pixel-office"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   # pomodoro-timer plugin
   - package-ecosystem: "npm"
     directory: "/plugins/pomodoro-timer"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   # regex-tester plugin
   - package-ecosystem: "npm"
     directory: "/plugins/regex-tester"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   # rss-reader plugin
   - package-ecosystem: "npm"
     directory: "/plugins/rss-reader"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   # session-notes plugin
   - package-ecosystem: "npm"
     directory: "/plugins/session-notes"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   # uuid-generator plugin
   - package-ecosystem: "npm"
     directory: "/plugins/uuid-generator"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
 
   # basic template
   - package-ecosystem: "npm"
     directory: "/templates/basic"
     schedule:
       interval: "weekly"
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"

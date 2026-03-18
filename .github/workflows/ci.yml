@@ -63,7 +63,7 @@ jobs:
       - name: Test
         working-directory: plugins/${{ matrix.plugin }}
         run: |
-          if npm run --silent test --if-present 2>/dev/null && node -e "
+          if node -e "
             const pkg = require('./package.json');
             process.exit(pkg.scripts && pkg.scripts.test ? 0 : 1);
           "; then
