@@ -35,6 +35,24 @@ var __hermes_plugin__ = function(exports, React2) {
       flexShrink: 0,
       gap: "8px"
     },
+    headerLeft: {
+      display: "flex",
+      alignItems: "center",
+      gap: "6px",
+      flex: 1,
+      overflow: "hidden"
+    },
+    backBtn: {
+      background: "none",
+      border: "none",
+      color: "var(--text-3)",
+      cursor: "pointer",
+      padding: "2px 4px",
+      display: "flex",
+      alignItems: "center",
+      flexShrink: 0,
+      borderRadius: "var(--radius-sm)"
+    },
     sessionLabel: {
       fontSize: "var(--text-sm)",
       color: "var(--text-2)",
@@ -91,25 +109,100 @@ var __hermes_plugin__ = function(exports, React2) {
       padding: "20px",
       textAlign: "center",
       lineHeight: 1.6
+    },
+    notesList: {
+      flex: 1,
+      overflow: "auto",
+      display: "flex",
+      flexDirection: "column"
+    },
+    noteRow: {
+      padding: "8px 12px",
+      borderBottom: "1px solid var(--border)",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "column",
+      gap: "2px"
+    },
+    noteRowName: {
+      fontSize: "var(--text-sm)",
+      fontWeight: 600,
+      color: "var(--text-1)",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
+    },
+    noteRowActive: {
+      color: "var(--accent)"
+    },
+    noteRowPreview: {
+      fontSize: "var(--text-xs)",
+      color: "var(--text-3)",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap"
+    },
+    noteRowMeta: {
+      fontSize: "var(--text-xs)",
+      color: "var(--text-3)",
+      opacity: 0.6
     }
   };
+  const BackArrow = () => /* @__PURE__ */ React__namespace.createElement("svg", { width: "14", height: "14", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" }, /* @__PURE__ */ React__namespace.createElement("path", { d: "M19 12H5" }), /* @__PURE__ */ React__namespace.createElement("polyline", { points: "12 19 5 12 12 5" }));
   function NotesPanel() {
     const [state, setState] = React__namespace.useState(getState);
+    const [noteEntries, setNoteEntries] = React__namespace.useState([]);
     const textareaRef = React__namespace.useRef(null);
     React__namespace.useEffect(() => {
       return subscribe(() => setState(getState()));
     }, []);
     React__namespace.useEffect(() => {
-      if (state.sessionId && textareaRef.current) {
+      if (state.view === "list") {
+        getAllNotes().then(setNoteEntries).catch(() => {
+        });
+      }
+    }, [state.view]);
+    React__namespace.useEffect(() => {
+      if (state.view === "editor" && state.sessionId && textareaRef.current) {
         textareaRef.current.focus();
       }
-    }, [state.sessionId]);
-    if (!state.sessionId) {
+    }, [state.view, state.sessionId]);
+    if (!state.sessionId && state.view === "editor") {
       return /* @__PURE__ */ React__namespace.createElement("div", { style: s.root }, /* @__PURE__ */ React__namespace.createElement("div", { style: s.empty }, "No active session.", "\n", "Open a terminal session to start taking notes."));
+    }
+    if (state.view === "list") {
+      return /* @__PURE__ */ React__namespace.createElement("div", { style: s.root }, /* @__PURE__ */ React__namespace.createElement("div", { style: s.header }, /* @__PURE__ */ React__namespace.createElement("span", { style: s.sessionLabel }, "All Notes")), noteEntries.length > 0 ? /* @__PURE__ */ React__namespace.createElement("div", { style: s.notesList }, noteEntries.map((entry) => /* @__PURE__ */ React__namespace.createElement(
+        "div",
+        {
+          key: entry.sessionId,
+          style: s.noteRow,
+          onClick: () => viewNote(entry.sessionId, entry.sessionName),
+          onMouseEnter: (e) => {
+            e.currentTarget.style.background = "var(--bg-2)";
+          },
+          onMouseLeave: (e) => {
+            e.currentTarget.style.background = "transparent";
+          }
+        },
+        /* @__PURE__ */ React__namespace.createElement("span", { style: {
+          ...s.noteRowName,
+          ...entry.sessionId === state.sessionId ? s.noteRowActive : {}
+        } }, entry.sessionName || entry.sessionId),
+        /* @__PURE__ */ React__namespace.createElement("span", { style: s.noteRowPreview }, entry.preview),
+        /* @__PURE__ */ React__namespace.createElement("span", { style: s.noteRowMeta }, entry.lines, " line", entry.lines !== 1 ? "s" : "")
+      ))) : /* @__PURE__ */ React__namespace.createElement("div", { style: s.empty }, "No notes yet.", "\n", "Open a session and start typing."));
     }
     const lines = state.note ? state.note.split("\n").length : 0;
     const chars = state.note.length;
-    return /* @__PURE__ */ React__namespace.createElement("div", { style: s.root }, /* @__PURE__ */ React__namespace.createElement("div", { style: s.header }, /* @__PURE__ */ React__namespace.createElement("span", { style: s.sessionLabel }, state.sessionName || state.sessionId), state.note.trim() && /* @__PURE__ */ React__namespace.createElement(
+    return /* @__PURE__ */ React__namespace.createElement("div", { style: s.root }, /* @__PURE__ */ React__namespace.createElement("div", { style: s.header }, /* @__PURE__ */ React__namespace.createElement("div", { style: s.headerLeft }, /* @__PURE__ */ React__namespace.createElement(
+      "button",
+      {
+        style: s.backBtn,
+        onClick: viewList,
+        title: "Back to notes list"
+      },
+      /* @__PURE__ */ React__namespace.createElement(BackArrow, null)
+    ), /* @__PURE__ */ React__namespace.createElement("span", { style: s.sessionLabel }, state.sessionName || state.sessionId)), state.note.trim() && /* @__PURE__ */ React__namespace.createElement(
       "button",
       {
         style: s.clearBtn,
@@ -140,6 +233,7 @@ var __hermes_plugin__ = function(exports, React2) {
   let autoSaveDelay = 500;
   let fontSize = 14;
   let showLineCount = true;
+  let currentView = "editor";
   let listeners = /* @__PURE__ */ new Set();
   function getState() {
     return {
@@ -147,8 +241,39 @@ var __hermes_plugin__ = function(exports, React2) {
       sessionName: activeSessionName,
       note: currentNote,
       fontSize,
-      showLineCount
+      showLineCount,
+      view: currentView
     };
+  }
+  function viewList() {
+    currentView = "list";
+    notifyListeners();
+  }
+  async function viewNote(sessionId, sessionName) {
+    await loadNoteForSession(sessionId, sessionName);
+    currentView = "editor";
+    notifyListeners();
+  }
+  async function getAllNotes() {
+    if (!api) return [];
+    const entries = [];
+    try {
+      const sessions = await api.sessions.list();
+      for (const session of sessions) {
+        const stored = await api.storage.get(storageKey(session.id));
+        if (stored && stored.trim()) {
+          const firstLine = stored.split("\n")[0].slice(0, 80);
+          entries.push({
+            sessionId: session.id,
+            sessionName: session.name,
+            preview: firstLine,
+            lines: stored.split("\n").length
+          });
+        }
+      }
+    } catch {
+    }
+    return entries;
   }
   function subscribe(listener) {
     listeners.add(listener);
@@ -322,9 +447,12 @@ var __hermes_plugin__ = function(exports, React2) {
   exports.activate = activate;
   exports.clearNote = clearNote;
   exports.deactivate = deactivate;
+  exports.getAllNotes = getAllNotes;
   exports.getState = getState;
   exports.subscribe = subscribe;
   exports.updateNote = updateNote;
+  exports.viewList = viewList;
+  exports.viewNote = viewNote;
   Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
   return exports;
 }({}, React);
