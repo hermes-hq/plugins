@@ -56,6 +56,7 @@ let saveTimer: ReturnType<typeof setTimeout> | null = null;
 let autoSaveDelay = 500;
 let fontSize = 14;
 let showLineCount = true;
+let currentView: "editor" | "list" = "editor";
 let listeners = new Set<() => void>();
 
 export interface NotesState {
@@ -64,6 +65,7 @@ export interface NotesState {
 	note: string;
 	fontSize: number;
 	showLineCount: boolean;
+	view: "editor" | "list";
 }
 
 export function getState(): NotesState {
@@ -73,7 +75,40 @@ export function getState(): NotesState {
 		note: currentNote,
 		fontSize,
 		showLineCount,
+		view: currentView,
 	};
+}
+
+export function viewList() {
+	currentView = "list";
+	notifyListeners();
+}
+
+export async function viewNote(sessionId: string, sessionName: string) {
+	await loadNoteForSession(sessionId, sessionName);
+	currentView = "editor";
+	notifyListeners();
+}
+
+export async function getAllNotes(): Promise<{ sessionId: string; sessionName: string; preview: string; lines: number }[]> {
+	if (!api) return [];
+	const entries: { sessionId: string; sessionName: string; preview: string; lines: number }[] = [];
+	try {
+		const sessions = await api.sessions.list();
+		for (const session of sessions) {
+			const stored = await api.storage.get(storageKey(session.id));
+			if (stored && stored.trim()) {
+				const firstLine = stored.split("\n")[0].slice(0, 80);
+				entries.push({
+					sessionId: session.id,
+					sessionName: session.name,
+					preview: firstLine,
+					lines: stored.split("\n").length,
+				});
+			}
+		}
+	} catch { /* best effort */ }
+	return entries;
 }
 
 export function subscribe(listener: () => void): () => void {
