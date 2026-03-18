@@ -37,6 +37,17 @@ interface HermesPluginAPI {
 
 let api: HermesPluginAPI | null = null;
 let listeners = new Set<() => void>();
+const isMac = typeof navigator !== "undefined" && navigator.userAgent.includes("Mac");
+
+export interface NetworkInterface {
+	name: string;
+	ip: string;
+	type: string;
+}
+
+export interface PingResult {
+	output: string;
+}
 
 export interface IpInfo {
 	ip: string;
@@ -61,24 +72,36 @@ export interface NetworkState {
 	ipInfo: IpInfo | null;
 	ipLoading: boolean;
 	ipError: string | null;
+	interfaces: NetworkInterface[];
+	interfacesLoading: boolean;
+	interfacesError: string | null;
 	dnsRecords: DnsRecord[];
 	dnsLoading: boolean;
 	dnsError: string | null;
 	whoisResult: WhoisResult | null;
 	whoisLoading: boolean;
 	whoisError: string | null;
+	pingResult: PingResult | null;
+	pingLoading: boolean;
+	pingError: string | null;
 }
 
 let state: NetworkState = {
 	ipInfo: null,
 	ipLoading: false,
 	ipError: null,
+	interfaces: [],
+	interfacesLoading: false,
+	interfacesError: null,
 	dnsRecords: [],
 	dnsLoading: false,
 	dnsError: null,
 	whoisResult: null,
 	whoisLoading: false,
 	whoisError: null,
+	pingResult: null,
+	pingLoading: false,
+	pingError: null,
 };
 
 export function getState(): NetworkState {
@@ -172,6 +195,67 @@ export async function whoisLookup(query: string) {
 	notify();
 }
 
+export async function fetchInterfaces() {
+	if (!api || typeof (api.shell as any).exec !== "function") return;
+	state = { ...state, interfacesLoading: true, interfacesError: null, interfaces: [] };
+	notify();
+	try {
+		const result = await (api.shell as any).exec("ifconfig");
+		const output: string = result.stdout || "";
+		const ifaces: NetworkInterface[] = [];
+		const blocks = output.split(/(?=^\S)/m);
+		for (const block of blocks) {
+			const nameMatch = block.match(/^(\S+?)[:]/);
+			if (!nameMatch) continue;
+			const name = nameMatch[1];
+			const inet4 = block.match(/inet\s+(\d+\.\d+\.\d+\.\d+)/);
+			const inet6 = block.match(/inet6\s+([0-9a-fA-F:]+)/);
+			if (inet4) {
+				ifaces.push({ name, ip: inet4[1], type: "IPv4" });
+			}
+			if (inet6) {
+				ifaces.push({ name, ip: inet6[1], type: "IPv6" });
+			}
+		}
+		state = { ...state, interfaces: ifaces, interfacesLoading: false };
+	} catch (err) {
+		state = { ...state, interfacesLoading: false, interfacesError: String(err) };
+	}
+	notify();
+}
+
+export async function runPing(host: string) {
+	if (!api || typeof (api.shell as any).exec !== "function") return;
+	state = { ...state, pingLoading: true, pingError: null, pingResult: null };
+	notify();
+	try {
+		const args = isMac ? ["-c", "4", host] : ["-c", "4", host];
+		const result = await (api.shell as any).exec("ping", args);
+		state = { ...state, pingResult: { output: result.stdout || result.stderr }, pingLoading: false };
+	} catch (err) {
+		state = { ...state, pingLoading: false, pingError: String(err) };
+	}
+	notify();
+}
+
+export async function runTraceroute(host: string) {
+	if (!api || typeof (api.shell as any).exec !== "function") return;
+	state = { ...state, pingLoading: true, pingError: null, pingResult: null };
+	notify();
+	try {
+		const cmd = isMac ? "traceroute" : "traceroute";
+		const result = await (api.shell as any).exec(cmd, [host]);
+		state = { ...state, pingResult: { output: result.stdout || result.stderr }, pingLoading: false };
+	} catch (err) {
+		state = { ...state, pingLoading: false, pingError: String(err) };
+	}
+	notify();
+}
+
+export function hasShellExec(): boolean {
+	return api != null && typeof (api.shell as any).exec === "function";
+}
+
 export async function copyToClipboard(text: string) {
 	if (!api) return;
 	try {
@@ -197,8 +281,9 @@ export async function activate(pluginApi: HermesPluginAPI) {
 		api.commands.register("ip-network-info.refresh", () => fetchPublicIp())
 	);
 
-	// Auto-fetch public IP on activation
+	// Auto-fetch public IP and local interfaces on activation
 	fetchPublicIp();
+	fetchInterfaces();
 }
 
 export function deactivate() {
