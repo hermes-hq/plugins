@@ -24,7 +24,7 @@ jobs:
     outputs:
       plugins: ${{ steps.find.outputs.plugins }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - id: find
         name: Discover plugin directories
         run: |
@@ -46,7 +46,7 @@ jobs:
       matrix:
         plugin: ${{ fromJson(needs.discover.outputs.plugins) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: actions/setup-node@v4
         with:
@@ -102,7 +102,7 @@ jobs:
   validate-manifests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Validate plugin manifests
         run: |
