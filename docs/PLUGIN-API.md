@@ -435,9 +435,11 @@ const data = JSON.parse(response);
 
 ## `api.shell`
 
-Open URLs in the user's default browser. **Requires `"network"` permission.**
+Shell operations. `openExternal` requires `"network"` permission. `exec` requires `"shell.exec"` permission.
 
 ### `api.shell.openExternal(url)`
+
+Open a URL in the user's default browser. **Requires `"network"` permission.**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -448,6 +450,30 @@ Open URLs in the user's default browser. **Requires `"network"` permission.**
 ```typescript
 await api.shell.openExternal("https://hermes-ide.com");
 ```
+
+### `api.shell.exec(command, args?)`
+
+Execute a shell command and capture its output. **Requires `"shell.exec"` permission.**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `command` | `string` | The command to run (e.g., `"ping"`, `"ifconfig"`) |
+| `args` | `string[]` (optional) | Arguments to pass to the command |
+
+- **Returns:** `Promise<{ stdout: string; stderr: string; exitCode: number }>`
+
+```typescript
+const result = await api.shell.exec("ping", ["-c", "4", "google.com"]);
+console.log(result.stdout);  // Ping output
+console.log(result.exitCode); // 0 on success
+```
+
+> **Availability:** Hermes IDE 0.5.16+. For backward compatibility, guard the call:
+> ```typescript
+> if (typeof api.shell.exec === "function") {
+>   const result = await api.shell.exec("whoami");
+> }
+> ```
 
 ---
 
@@ -546,6 +572,7 @@ Permissions are declared in `hermes-plugin.json` and control access to sensitive
 | `notifications` | `api.notifications.send()` |
 | `sessions.read` | `api.sessions.*`, `api.agents.*` |
 | `network` | `api.network.fetch()`, `api.shell.openExternal()` |
+| `shell.exec` | `api.shell.exec()` |
 
 ### Auto-granted Permissions
 

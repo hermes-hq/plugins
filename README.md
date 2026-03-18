@@ -93,6 +93,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for full details and review criteria.
 | [Regex Tester](./plugins/regex-tester) | Test regular expressions with live match highlighting, capture groups, and common presets |
 | [RSS Feed Reader](./plugins/rss-reader) | Subscribe to RSS and Atom feeds, browse articles, and get notified of new content without leaving the terminal |
 | [Pixel Office](./plugins/pixel-office) | Visualize AI coding agents as animated pixel art characters in a virtual office |
+| [IP & Network Info](./plugins/ip-network-info) | Public IP lookup, DNS queries, WHOIS, local interfaces, ping, and traceroute |
 
 ## License
 

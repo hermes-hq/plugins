@@ -199,6 +199,7 @@ Declare the permissions your plugin requires. See the [Plugin API Reference](./P
 | `notifications` | `api.notifications.send()` |
 | `sessions.read` | `api.sessions.*`, `api.agents.*` |
 | `network` | `api.network.fetch()`, `api.shell.openExternal()` |
+| `shell.exec` | `api.shell.exec()` — execute shell commands |
 
 Only request permissions your plugin actually uses. Unnecessary permissions will be flagged during review.
 
