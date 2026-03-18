@@ -6,8 +6,7 @@
   "scripts": {
     "prebuild": "node scripts/encode-assets.js",
     "build": "vite build",
-    "dev": "node scripts/encode-assets.js && vite build --watch",
-    "test": "vitest run"
+    "dev": "node scripts/encode-assets.js && vite build --watch"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
