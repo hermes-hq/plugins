@@ -4,18 +4,25 @@
     {
       "id": "hermes-hq.json-formatter",
       "name": "JSON Formatter",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "description": "Format, minify, and validate JSON from clipboard or manual input",
       "author": "Hermes IDE",
       "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M8 3H6a2 2 0 0 0-2 2v2m0 10v2a2 2 0 0 0 2 2h2M16 3h2a2 2 0 0 1 2 2v2m0 10v2a2 2 0 0 1-2 2h-2\"/><path d=\"M9 12h6M12 9v6\"/></svg>",
       "category": "Formatters",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/json-formatter-v1.0.1/hermes-hq.json-formatter-1.0.1.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/json-formatter-v1.0.2/hermes-hq.json-formatter-1.0.2.tgz",
       "minAppVersion": "0.3.0",
       "permissions": [
         "clipboard.read",
         "clipboard.write"
       ],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-03-18",
+          "changes": [
+            "Declared storage permission explicitly for settings access"
+          ]
+        },
         {
           "version": "1.0.1",
           "date": "2026-03-10",
