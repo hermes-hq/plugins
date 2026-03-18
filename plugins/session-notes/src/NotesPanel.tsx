@@ -1,5 +1,5 @@
 import * as React from "react";
-import { getState, subscribe, updateNote, clearNote, type NotesState } from "./activate";
+import { getState, subscribe, updateNote, clearNote, getAllNotes, viewNote, viewList, type NotesState } from "./activate";
 
 const s = {
 	root: {
@@ -18,6 +18,24 @@ const s = {
 		justifyContent: "space-between",
 		flexShrink: 0,
 		gap: "8px",
+	},
+	headerLeft: {
+		display: "flex",
+		alignItems: "center",
+		gap: "6px",
+		flex: 1,
+		overflow: "hidden" as const,
+	},
+	backBtn: {
+		background: "none",
+		border: "none",
+		color: "var(--text-3)",
+		cursor: "pointer" as const,
+		padding: "2px 4px",
+		display: "flex",
+		alignItems: "center",
+		flexShrink: 0,
+		borderRadius: "var(--radius-sm)",
 	},
 	sessionLabel: {
 		fontSize: "var(--text-sm)",
@@ -76,24 +94,76 @@ const s = {
 		textAlign: "center" as const,
 		lineHeight: 1.6,
 	},
+	notesList: {
+		flex: 1,
+		overflow: "auto" as const,
+		display: "flex",
+		flexDirection: "column" as const,
+	},
+	noteRow: {
+		padding: "8px 12px",
+		borderBottom: "1px solid var(--border)",
+		cursor: "pointer" as const,
+		display: "flex",
+		flexDirection: "column" as const,
+		gap: "2px",
+	},
+	noteRowName: {
+		fontSize: "var(--text-sm)",
+		fontWeight: 600,
+		color: "var(--text-1)",
+		overflow: "hidden" as const,
+		textOverflow: "ellipsis" as const,
+		whiteSpace: "nowrap" as const,
+	},
+	noteRowActive: {
+		color: "var(--accent)",
+	},
+	noteRowPreview: {
+		fontSize: "var(--text-xs)",
+		color: "var(--text-3)",
+		overflow: "hidden" as const,
+		textOverflow: "ellipsis" as const,
+		whiteSpace: "nowrap" as const,
+	},
+	noteRowMeta: {
+		fontSize: "var(--text-xs)",
+		color: "var(--text-3)",
+		opacity: 0.6,
+	},
 };
+
+const BackArrow = () => (
+	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+		<path d="M19 12H5" />
+		<polyline points="12 19 5 12 12 5" />
+	</svg>
+);
 
 export function NotesPanel() {
 	const [state, setState] = React.useState<NotesState>(getState);
+	const [noteEntries, setNoteEntries] = React.useState<{ sessionId: string; sessionName: string; preview: string; lines: number }[]>([]);
 	const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 
 	React.useEffect(() => {
 		return subscribe(() => setState(getState()));
 	}, []);
 
-	// Focus textarea when session changes
+	// Load notes list when showing list view
 	React.useEffect(() => {
-		if (state.sessionId && textareaRef.current) {
+		if (state.view === "list") {
+			getAllNotes().then(setNoteEntries).catch(() => {});
+		}
+	}, [state.view]);
+
+	// Focus textarea when entering editor
+	React.useEffect(() => {
+		if (state.view === "editor" && state.sessionId && textareaRef.current) {
 			textareaRef.current.focus();
 		}
-	}, [state.sessionId]);
+	}, [state.view, state.sessionId]);
 
-	if (!state.sessionId) {
+	if (!state.sessionId && state.view === "editor") {
 		return (
 			<div style={s.root}>
 				<div style={s.empty}>
@@ -103,15 +173,64 @@ export function NotesPanel() {
 		);
 	}
 
+	// ─── List View ────────────────────────────────────────
+	if (state.view === "list") {
+		return (
+			<div style={s.root}>
+				<div style={s.header}>
+					<span style={s.sessionLabel}>All Notes</span>
+				</div>
+				{noteEntries.length > 0 ? (
+					<div style={s.notesList}>
+						{noteEntries.map((entry) => (
+							<div
+								key={entry.sessionId}
+								style={s.noteRow}
+								onClick={() => viewNote(entry.sessionId, entry.sessionName)}
+								onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.background = "var(--bg-2)"; }}
+								onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
+							>
+								<span style={{
+									...s.noteRowName,
+									...(entry.sessionId === state.sessionId ? s.noteRowActive : {}),
+								}}>
+									{entry.sessionName || entry.sessionId}
+								</span>
+								<span style={s.noteRowPreview}>{entry.preview}</span>
+								<span style={s.noteRowMeta}>
+									{entry.lines} line{entry.lines !== 1 ? "s" : ""}
+								</span>
+							</div>
+						))}
+					</div>
+				) : (
+					<div style={s.empty}>
+						No notes yet.{"\n"}Open a session and start typing.
+					</div>
+				)}
+			</div>
+		);
+	}
+
+	// ─── Editor View ──────────────────────────────────────
 	const lines = state.note ? state.note.split("\n").length : 0;
 	const chars = state.note.length;
 
 	return (
 		<div style={s.root}>
 			<div style={s.header}>
-				<span style={s.sessionLabel}>
-					{state.sessionName || state.sessionId}
-				</span>
+				<div style={s.headerLeft}>
+					<button
+						style={s.backBtn}
+						onClick={viewList}
+						title="Back to notes list"
+					>
+						<BackArrow />
+					</button>
+					<span style={s.sessionLabel}>
+						{state.sessionName || state.sessionId}
+					</span>
+				</div>
 				{state.note.trim() && (
 					<button
 						style={s.clearBtn}

@@ -110,18 +110,26 @@
     {
       "id": "hermes-hq.session-notes",
       "name": "Session Notes",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "description": "Markdown scratchpad for each terminal session with auto-save and session-aware switching",
       "author": "Hermes IDE",
       "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z\"/><path d=\"M8 7h8M8 11h8M8 15h4\"/></svg>",
       "category": "Productivity",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/session-notes-v1.1.0/hermes-hq.session-notes-1.1.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/session-notes-v1.2.0/hermes-hq.session-notes-1.2.0.tgz",
       "minAppVersion": "0.4.0",
       "permissions": [
         "storage",
         "sessions.read"
       ],
       "changelog": [
+        {
+          "version": "1.2.0",
+          "date": "2026-03-18",
+          "changes": [
+            "Added notes list view to browse all session notes",
+            "Added back button to return from note editor to the list"
+          ]
+        },
         {
           "version": "1.1.0",
           "date": "2026-03-14",
