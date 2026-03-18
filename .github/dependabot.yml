@@ -1,0 +1,56 @@
+version: 2
+
+updates:
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # json-formatter plugin
+  - package-ecosystem: "npm"
+    directory: "/plugins/json-formatter"
+    schedule:
+      interval: "weekly"
+
+  # pixel-office plugin
+  - package-ecosystem: "npm"
+    directory: "/plugins/pixel-office"
+    schedule:
+      interval: "weekly"
+
+  # pomodoro-timer plugin
+  - package-ecosystem: "npm"
+    directory: "/plugins/pomodoro-timer"
+    schedule:
+      interval: "weekly"
+
+  # regex-tester plugin
+  - package-ecosystem: "npm"
+    directory: "/plugins/regex-tester"
+    schedule:
+      interval: "weekly"
+
+  # rss-reader plugin
+  - package-ecosystem: "npm"
+    directory: "/plugins/rss-reader"
+    schedule:
+      interval: "weekly"
+
+  # session-notes plugin
+  - package-ecosystem: "npm"
+    directory: "/plugins/session-notes"
+    schedule:
+      interval: "weekly"
+
+  # uuid-generator plugin
+  - package-ecosystem: "npm"
+    directory: "/plugins/uuid-generator"
+    schedule:
+      interval: "weekly"
+
+  # basic template
+  - package-ecosystem: "npm"
+    directory: "/templates/basic"
+    schedule:
+      interval: "weekly"
