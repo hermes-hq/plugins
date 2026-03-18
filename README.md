@@ -94,6 +94,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for full details and review criteria.
 | [RSS Feed Reader](./plugins/rss-reader) | Subscribe to RSS and Atom feeds, browse articles, and get notified of new content without leaving the terminal |
 | [Pixel Office](./plugins/pixel-office) | Visualize AI coding agents as animated pixel art characters in a virtual office |
 | [IP & Network Info](./plugins/ip-network-info) | Public IP lookup, DNS queries, WHOIS, local interfaces, ping, and traceroute |
+| [Markdown Preview](./plugins/markdown-preview) | Live preview of Markdown files with full GFM support, auto-refresh, and file scanning |
 
 ## License
 
