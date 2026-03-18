@@ -1,8 +1,8 @@
 {
   "id": "hermes-hq.markdown-preview",
   "name": "Markdown Preview",
-  "version": "1.0.0",
-  "description": "Live preview of Markdown files with GitHub Flavored Markdown support",
+  "version": "1.1.0",
+  "description": "Live preview and editor for Markdown files with GitHub Flavored Markdown and Mermaid diagram support",
   "author": "Hermes IDE",
   "main": "dist/index.js",
   "activationEvents": [
@@ -20,6 +20,11 @@
       {
         "command": "markdown-preview.refresh",
         "title": "Refresh Preview",
+        "category": "Markdown"
+      },
+      {
+        "command": "markdown-preview.save",
+        "title": "Save Markdown File",
         "category": "Markdown"
       }
     ],

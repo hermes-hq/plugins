@@ -1,6 +1,7 @@
 import { MarkdownPanel } from "./MarkdownPanel";
 import { injectStyles } from "./styles";
-import { marked } from "marked";
+import { marked, type Renderer } from "marked";
+import mermaid from "mermaid";
 
 interface Disposable { dispose(): void; }
 interface PluginPanelProps { pluginId: string; panelId: string; }
@@ -46,6 +47,28 @@ interface HermesPluginAPI {
 // Configure marked for GFM
 marked.setOptions({ gfm: true, breaks: true });
 
+// Override renderer: mermaid code blocks → placeholder divs
+const renderer: Partial<Renderer> = {
+	code({ text, lang }: { text: string; lang?: string }) {
+		if (lang === "mermaid") {
+			const encoded = btoa(encodeURIComponent(text));
+			return `<div class="mermaid-placeholder" data-mermaid-src="${encoded}"></div>`;
+		}
+		const escaped = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+		const langClass = lang ? ` class="language-${lang}"` : "";
+		return `<pre><code${langClass}>${escaped}</code></pre>`;
+	},
+};
+marked.use({ renderer });
+
+// Lazy-init mermaid
+let mermaidReady = false;
+function ensureMermaid() {
+	if (mermaidReady) return;
+	mermaid.initialize({ startOnLoad: false, theme: "dark" });
+	mermaidReady = true;
+}
+
 let api: HermesPluginAPI | null = null;
 let listeners = new Set<() => void>();
 let pollTimer: ReturnType<typeof setInterval> | null = null;
@@ -61,8 +84,10 @@ export interface MarkdownState {
 	lastMtime: number;
 	mdFiles: string[];
 	filesLoading: boolean;
-	view: "preview" | "file-picker";
+	view: "preview" | "file-picker" | "edit";
 	pollInterval: number;
+	editContent: string;
+	dirty: boolean;
 }
 
 let state: MarkdownState = {
@@ -77,6 +102,8 @@ let state: MarkdownState = {
 	filesLoading: false,
 	view: "file-picker",
 	pollInterval: 2000,
+	editContent: "",
+	dirty: false,
 };
 
 export function getState(): MarkdownState { return { ...state }; }
@@ -113,7 +140,7 @@ async function getMtime(path: string): Promise<number> {
 
 export async function loadFile(path: string) {
 	if (!api || !path.trim()) return;
-	state = { ...state, filePath: path, loading: true, error: null, view: "preview" };
+	state = { ...state, filePath: path, loading: true, error: null, view: "preview", editContent: "", dirty: false };
 	notify();
 	try {
 		const content = await readFile(path);
@@ -139,6 +166,8 @@ export async function refreshPreview() {
 
 async function pollForChanges() {
 	if (!api || !state.filePath || state.loading) return;
+	// Don't overwrite user edits
+	if (state.view === "edit" || state.dirty) return;
 	try {
 		const mtime = await getMtime(state.filePath);
 		if (mtime > 0 && mtime !== state.lastMtime) {
@@ -182,14 +211,71 @@ export async function discoverFiles() {
 }
 
 export function showFilePicker() {
-	state = { ...state, view: "file-picker" };
+	state = { ...state, view: "file-picker", editContent: "", dirty: false };
 	notify();
 }
 
 export function showPreview() {
-	if (state.filePath && state.html) {
+	if (!state.filePath) return;
+	// If switching from edit with dirty content, re-render from editContent
+	if (state.view === "edit" && state.dirty) {
+		const html = renderMarkdown(state.editContent);
+		state = { ...state, view: "preview", content: state.editContent, html };
+	} else if (state.html) {
 		state = { ...state, view: "preview" };
+	}
+	notify();
+}
+
+export function showEdit() {
+	if (!state.filePath) return;
+	state = { ...state, view: "edit", editContent: state.content, dirty: false };
+	notify();
+}
+
+export function updateEditContent(text: string) {
+	state = { ...state, editContent: text, dirty: text !== state.content };
+	notify();
+}
+
+export async function saveFile() {
+	if (!api || !state.filePath || !state.dirty) return;
+	try {
+		const result = await api.shell.exec("sh", [
+			"-c", 'printf "%s" "$0" > "$1"', state.editContent, state.filePath,
+		]);
+		if (result.exitCode !== 0) {
+			api.ui.showToast(`Save failed: ${result.stderr}`, { type: "error" });
+			return;
+		}
+		const mtime = await getMtime(state.filePath);
+		const html = renderMarkdown(state.editContent);
+		state = { ...state, content: state.editContent, html, dirty: false, lastMtime: mtime };
 		notify();
+		api.ui.showToast("File saved", { type: "success", duration: 2000 });
+	} catch (err) {
+		api?.ui.showToast(`Save failed: ${err}`, { type: "error" });
+	}
+}
+
+let mermaidCounter = 0;
+
+export async function renderMermaidDiagrams(container: HTMLElement) {
+	ensureMermaid();
+	const placeholders = container.querySelectorAll<HTMLElement>(".mermaid-placeholder[data-mermaid-src]");
+	for (const el of placeholders) {
+		const encoded = el.getAttribute("data-mermaid-src");
+		if (!encoded) continue;
+		try {
+			const source = decodeURIComponent(atob(encoded));
+			const id = `mermaid-${++mermaidCounter}`;
+			const { svg } = await mermaid.render(id, source);
+			el.innerHTML = svg;
+			el.removeAttribute("data-mermaid-src");
+		} catch {
+			el.innerHTML = '<span style="color:var(--red);font-size:var(--text-xs)">Failed to render diagram</span>';
+			el.removeAttribute("data-mermaid-src");
+		}
 	}
 }
 
@@ -206,6 +292,9 @@ export async function activate(pluginApi: HermesPluginAPI) {
 	);
 	api.subscriptions.push(
 		api.commands.register("markdown-preview.refresh", () => refreshPreview())
+	);
+	api.subscriptions.push(
+		api.commands.register("markdown-preview.save", () => saveFile())
 	);
 
 	// Load settings
@@ -260,5 +349,6 @@ export function deactivate() {
 		filePath: "", workingDirectory: "", content: "", html: "",
 		loading: false, error: null, lastMtime: 0, mdFiles: [],
 		filesLoading: false, view: "file-picker", pollInterval: 2000,
+		editContent: "", dirty: false,
 	};
 }

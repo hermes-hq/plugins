@@ -111,6 +111,22 @@ const CSS = `
 .md-preview-content del {
   color: var(--text-3);
 }
+
+.mermaid-placeholder {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin: 0.6em 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+}
+.mermaid-placeholder svg {
+  max-width: 100%;
+  height: auto;
+}
 `;
 
 let injected = false;

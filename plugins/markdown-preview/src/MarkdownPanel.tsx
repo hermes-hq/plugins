@@ -1,7 +1,9 @@
 import * as React from "react";
 import {
 	getState, subscribe, loadFile, discoverFiles,
-	showFilePicker, refreshPreview, type MarkdownState,
+	showFilePicker, showPreview, showEdit, refreshPreview,
+	updateEditContent, saveFile, renderMermaidDiagrams,
+	type MarkdownState,
 } from "./activate";
 
 const s = {
@@ -151,6 +153,39 @@ const s = {
 		background: "var(--green, #3fb950)",
 		flexShrink: 0,
 	},
+	dirtyIndicator: {
+		width: "6px",
+		height: "6px",
+		borderRadius: "50%",
+		background: "var(--yellow, #d29922)",
+		flexShrink: 0,
+	},
+	textarea: {
+		flex: 1,
+		width: "100%",
+		background: "var(--bg-1)",
+		border: "none",
+		color: "var(--text-0)",
+		fontFamily: "var(--font-mono)",
+		fontSize: "var(--text-sm)",
+		padding: "12px 16px",
+		outline: "none",
+		resize: "none" as const,
+		lineHeight: 1.7,
+		boxSizing: "border-box" as const,
+	},
+	footer: {
+		padding: "4px 12px",
+		borderTop: "1px solid var(--border)",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "space-between",
+		flexShrink: 0,
+	},
+	footerText: {
+		fontSize: "var(--text-xs)",
+		color: "var(--text-3)",
+	},
 };
 
 const BackArrow = () => (
@@ -167,6 +202,28 @@ export function MarkdownPanel() {
 
 	React.useEffect(() => {
 		return subscribe(() => setState(getState()));
+	}, []);
+
+	// Render mermaid diagrams after preview HTML is set
+	React.useEffect(() => {
+		if (state.view === "preview" && state.html && contentRef.current) {
+			renderMermaidDiagrams(contentRef.current);
+		}
+	}, [state.view, state.html]);
+
+	// Cmd/Ctrl+S handler for edit view
+	React.useEffect(() => {
+		const handler = (e: KeyboardEvent) => {
+			if ((e.metaKey || e.ctrlKey) && e.key === "s") {
+				const current = getState();
+				if (current.view === "edit" && current.dirty) {
+					e.preventDefault();
+					saveFile();
+				}
+			}
+		};
+		window.addEventListener("keydown", handler);
+		return () => window.removeEventListener("keydown", handler);
 	}, []);
 
 	const handleOpenFile = () => {
@@ -238,7 +295,7 @@ export function MarkdownPanel() {
 
 					{state.filePath && state.html && (
 						<div style={s.section}>
-							<button style={s.btn} onClick={() => { state.view = "preview"; setState(getState()); }}>
+							<button style={s.btn} onClick={showPreview}>
 								Back to preview
 							</button>
 						</div>
@@ -248,9 +305,49 @@ export function MarkdownPanel() {
 		);
 	}
 
-	// ─── Preview View ─────────────────────────────────────
 	const fileName = state.filePath.split("/").pop() || state.filePath;
 
+	// ─── Edit View ────────────────────────────────────────
+	if (state.view === "edit") {
+		const lines = state.editContent.split("\n").length;
+		const chars = state.editContent.length;
+
+		return (
+			<div style={s.root}>
+				<div style={s.header}>
+					<div style={s.headerLeft}>
+						<button style={s.backBtn} onClick={showFilePicker} title="Change file">
+							<BackArrow />
+						</button>
+						<span style={s.fileName} title={state.filePath}>{fileName}</span>
+						{state.dirty && <span style={s.dirtyIndicator} title="Unsaved changes" />}
+					</div>
+					<button style={s.btn} onClick={showPreview} title="Preview">
+						Preview
+					</button>
+					{state.dirty && (
+						<button style={s.btn} onClick={saveFile} title="Save file">
+							Save
+						</button>
+					)}
+				</div>
+
+				<textarea
+					style={s.textarea}
+					value={state.editContent}
+					onChange={(e) => updateEditContent(e.target.value)}
+					spellCheck={false}
+				/>
+
+				<div style={s.footer}>
+					<span style={s.footerText}>{lines} lines, {chars} chars</span>
+					<span style={s.footerText}>{state.dirty ? "Unsaved" : "Saved"}</span>
+				</div>
+			</div>
+		);
+	}
+
+	// ─── Preview View ─────────────────────────────────────
 	return (
 		<div style={s.root}>
 			<div style={s.header}>
@@ -259,8 +356,14 @@ export function MarkdownPanel() {
 						<BackArrow />
 					</button>
 					<span style={s.fileName} title={state.filePath}>{fileName}</span>
-					{state.pollInterval > 0 && <span style={s.indicator} title="Auto-refreshing" />}
+					{state.dirty
+						? <span style={s.dirtyIndicator} title="Unsaved changes" />
+						: state.pollInterval > 0 && <span style={s.indicator} title="Auto-refreshing" />
+					}
 				</div>
+				<button style={s.btn} onClick={showEdit} title="Edit source">
+					Edit
+				</button>
 				<button style={s.btn} onClick={refreshPreview} title="Refresh now">
 					Refresh
 				</button>
