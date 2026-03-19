@@ -1,8 +1,8 @@
 {
   "id": "hermes-hq.markdown-preview",
   "name": "Markdown Preview",
-  "version": "1.1.0",
-  "description": "Rich preview and editor for Markdown files with Mermaid diagram support",
+  "version": "1.2.0",
+  "description": "Rich preview and editor for Markdown files with formatting toolbar and Mermaid diagram support",
   "author": "Hermes IDE",
   "main": "dist/index.js",
   "activationEvents": [

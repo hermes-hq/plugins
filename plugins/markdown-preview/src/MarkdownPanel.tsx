@@ -13,6 +13,116 @@ interface FileHandlerProps {
 	onBack: () => void;
 }
 
+// ─── Formatting helpers ──────────────────────────────────
+
+type FormatAction = (
+	textarea: HTMLTextAreaElement,
+	content: string,
+) => { newContent: string; selStart: number; selEnd: number };
+
+function wrapSelection(prefix: string, suffix: string): FormatAction {
+	return (ta, content) => {
+		const start = ta.selectionStart;
+		const end = ta.selectionEnd;
+		const selected = content.slice(start, end);
+		// If already wrapped, unwrap
+		if (
+			content.slice(start - prefix.length, start) === prefix &&
+			content.slice(end, end + suffix.length) === suffix
+		) {
+			const newContent = content.slice(0, start - prefix.length) + selected + content.slice(end + suffix.length);
+			return { newContent, selStart: start - prefix.length, selEnd: end - prefix.length };
+		}
+		const newContent = content.slice(0, start) + prefix + selected + suffix + content.slice(end);
+		return { newContent, selStart: start + prefix.length, selEnd: end + prefix.length };
+	};
+}
+
+function prependLine(prefix: string): FormatAction {
+	return (ta, content) => {
+		const start = ta.selectionStart;
+		const end = ta.selectionEnd;
+		// Find start of the current line
+		const lineStart = content.lastIndexOf("\n", start - 1) + 1;
+		const lineEnd = content.indexOf("\n", end);
+		const actualEnd = lineEnd === -1 ? content.length : lineEnd;
+		const lines = content.slice(lineStart, actualEnd).split("\n");
+		const alreadyPrefixed = lines.every(l => l.startsWith(prefix));
+		const newLines = alreadyPrefixed
+			? lines.map(l => l.slice(prefix.length))
+			: lines.map(l => prefix + l);
+		const joined = newLines.join("\n");
+		const newContent = content.slice(0, lineStart) + joined + content.slice(actualEnd);
+		const delta = joined.length - (actualEnd - lineStart);
+		return { newContent, selStart: start + (alreadyPrefixed ? -prefix.length : prefix.length), selEnd: end + delta };
+	};
+}
+
+function insertLink(): FormatAction {
+	return (ta, content) => {
+		const start = ta.selectionStart;
+		const end = ta.selectionEnd;
+		const selected = content.slice(start, end);
+		const text = selected || "link text";
+		const insert = `[${text}](url)`;
+		const newContent = content.slice(0, start) + insert + content.slice(end);
+		// Select "url" for easy replacement
+		const urlStart = start + text.length + 3;
+		return { newContent, selStart: urlStart, selEnd: urlStart + 3 };
+	};
+}
+
+function insertImage(): FormatAction {
+	return (ta, content) => {
+		const start = ta.selectionStart;
+		const end = ta.selectionEnd;
+		const selected = content.slice(start, end);
+		const alt = selected || "alt text";
+		const insert = `![${alt}](url)`;
+		const newContent = content.slice(0, start) + insert + content.slice(end);
+		const urlStart = start + alt.length + 4;
+		return { newContent, selStart: urlStart, selEnd: urlStart + 3 };
+	};
+}
+
+function insertHr(): FormatAction {
+	return (ta, content) => {
+		const start = ta.selectionStart;
+		const insert = "\n---\n";
+		const newContent = content.slice(0, start) + insert + content.slice(start);
+		return { newContent, selStart: start + insert.length, selEnd: start + insert.length };
+	};
+}
+
+function insertTable(): FormatAction {
+	return (ta, content) => {
+		const start = ta.selectionStart;
+		const table = "\n| Column 1 | Column 2 | Column 3 |\n| --- | --- | --- |\n| Cell | Cell | Cell |\n";
+		const newContent = content.slice(0, start) + table + content.slice(start);
+		return { newContent, selStart: start + table.length, selEnd: start + table.length };
+	};
+}
+
+const FORMATS: { label: string; title: string; action: FormatAction; shortcut?: string }[] = [
+	{ label: "B", title: "Bold (Cmd+B)", action: wrapSelection("**", "**"), shortcut: "b" },
+	{ label: "I", title: "Italic (Cmd+I)", action: wrapSelection("_", "_"), shortcut: "i" },
+	{ label: "S", title: "Strikethrough", action: wrapSelection("~~", "~~") },
+	{ label: "</>", title: "Inline code", action: wrapSelection("`", "`") },
+	{ label: "H1", title: "Heading 1", action: prependLine("# ") },
+	{ label: "H2", title: "Heading 2", action: prependLine("## ") },
+	{ label: "H3", title: "Heading 3", action: prependLine("### ") },
+	{ label: "•", title: "Bullet list", action: prependLine("- ") },
+	{ label: "1.", title: "Numbered list", action: prependLine("1. ") },
+	{ label: "☐", title: "Checkbox", action: prependLine("- [ ] ") },
+	{ label: ">", title: "Blockquote", action: prependLine("> ") },
+	{ label: "🔗", title: "Link (Cmd+K)", action: insertLink(), shortcut: "k" },
+	{ label: "🖼", title: "Image", action: insertImage() },
+	{ label: "—", title: "Horizontal rule", action: insertHr() },
+	{ label: "⊞", title: "Table", action: insertTable() },
+];
+
+// ─── Styles ──────────────────────────────────────────────
+
 const s = {
 	root: {
 		display: "flex",
@@ -89,6 +199,36 @@ const s = {
 		background: "var(--yellow, #d29922)",
 		flexShrink: 0,
 	},
+	toolbar: {
+		display: "flex",
+		alignItems: "center",
+		gap: "3px",
+		padding: "6px 12px",
+		borderBottom: "1px solid var(--border)",
+		background: "var(--bg-2)",
+		flexShrink: 0,
+		flexWrap: "wrap" as const,
+	},
+	toolBtn: {
+		background: "none",
+		border: "1px solid transparent",
+		borderRadius: "var(--radius-sm)",
+		color: "var(--text-2)",
+		fontFamily: "var(--font-mono)",
+		fontSize: "13px",
+		padding: "4px 10px",
+		cursor: "pointer" as const,
+		lineHeight: 1.4,
+		minWidth: "30px",
+		textAlign: "center" as const,
+	},
+	toolSep: {
+		width: "1px",
+		height: "20px",
+		background: "var(--border)",
+		margin: "0 6px",
+		flexShrink: 0,
+	},
 	textarea: {
 		flex: 1,
 		width: "100%",
@@ -124,9 +264,13 @@ const BackArrow = () => (
 	</svg>
 );
 
+// Group indices for separators in toolbar
+const SEPARATORS_AFTER = new Set([2, 3, 6, 10, 12]);
+
 export function MarkdownPanel(props: FileHandlerProps) {
 	const [state, setState] = React.useState<MarkdownState>(getState);
 	const contentRef = React.useRef<HTMLDivElement>(null);
+	const textareaRef = React.useRef<HTMLTextAreaElement>(null);
 	const onBackRef = React.useRef(props.onBack);
 	onBackRef.current = props.onBack;
 
@@ -146,20 +290,42 @@ export function MarkdownPanel(props: FileHandlerProps) {
 		}
 	}, [state.view, state.html]);
 
-	// Cmd/Ctrl+S handler for edit view
+	const applyFormat = React.useCallback((action: FormatAction) => {
+		const ta = textareaRef.current;
+		if (!ta) return;
+		const content = ta.value;
+		const { newContent, selStart, selEnd } = action(ta, content);
+		updateEditContent(newContent);
+		// Restore selection after React re-render
+		requestAnimationFrame(() => {
+			ta.focus();
+			ta.setSelectionRange(selStart, selEnd);
+		});
+	}, []);
+
+	// Keyboard shortcuts (Cmd+S, Cmd+B, Cmd+I, Cmd+K)
 	React.useEffect(() => {
 		const handler = (e: KeyboardEvent) => {
-			if ((e.metaKey || e.ctrlKey) && e.key === "s") {
-				const current = getState();
-				if (current.view === "edit" && current.dirty) {
+			if (!(e.metaKey || e.ctrlKey)) return;
+			const current = getState();
+
+			if (e.key === "s" && current.view === "edit" && current.dirty) {
+				e.preventDefault();
+				saveFile();
+				return;
+			}
+
+			if (current.view === "edit") {
+				const fmt = FORMATS.find(f => f.shortcut === e.key);
+				if (fmt) {
 					e.preventDefault();
-					saveFile();
+					applyFormat(fmt.action);
 				}
 			}
 		};
 		window.addEventListener("keydown", handler);
 		return () => window.removeEventListener("keydown", handler);
-	}, []);
+	}, [applyFormat]);
 
 	const fileName = props.filePath.split("/").pop() || props.filePath;
 
@@ -189,7 +355,34 @@ export function MarkdownPanel(props: FileHandlerProps) {
 					)}
 				</div>
 
+				<div style={s.toolbar}>
+					{FORMATS.map((fmt, i) => (
+						<React.Fragment key={i}>
+							<button
+								style={s.toolBtn}
+								title={fmt.title}
+								onMouseDown={(e) => e.preventDefault()}
+								onClick={() => applyFormat(fmt.action)}
+								onMouseEnter={(e) => {
+									(e.currentTarget as HTMLButtonElement).style.background = "var(--bg-3, var(--bg-1))";
+									(e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)";
+									(e.currentTarget as HTMLButtonElement).style.color = "var(--text-1)";
+								}}
+								onMouseLeave={(e) => {
+									(e.currentTarget as HTMLButtonElement).style.background = "none";
+									(e.currentTarget as HTMLButtonElement).style.borderColor = "transparent";
+									(e.currentTarget as HTMLButtonElement).style.color = "var(--text-3)";
+								}}
+							>
+								{fmt.label}
+							</button>
+							{SEPARATORS_AFTER.has(i) && <div style={s.toolSep} />}
+						</React.Fragment>
+					))}
+				</div>
+
 				<textarea
+					ref={textareaRef}
 					style={s.textarea}
 					value={state.editContent}
 					onChange={(e) => updateEditContent(e.target.value)}

@@ -305,13 +305,13 @@
     {
       "id": "hermes-hq.markdown-preview",
       "name": "Markdown Preview",
-      "version": "1.1.0",
-      "description": "Live preview and editor for Markdown files with GitHub Flavored Markdown and Mermaid diagram support",
+      "version": "1.2.0",
+      "description": "Rich preview and editor for Markdown files with formatting toolbar and Mermaid diagram support",
       "author": "Hermes IDE",
       "icon": "<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M7 16V8l3.5 4L14 8v8\"/><path d=\"M17 13l-2.5 3L12 13\"/></svg>",
       "category": "Quality of Life",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/markdown-preview-v1.1.0/hermes-hq.markdown-preview-1.1.0.tgz",
-      "minAppVersion": "0.5.16",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/markdown-preview-v1.2.0/hermes-hq.markdown-preview-1.2.0.tgz",
+      "minAppVersion": "0.5.17",
       "permissions": [
         "shell.exec",
         "sessions.read",
@@ -319,10 +319,21 @@
       ],
       "changelog": [
         {
+          "version": "1.2.0",
+          "date": "2026-03-19",
+          "changes": [
+            "Markdown files now open directly from the file explorer in the main content area",
+            "Formatting toolbar with buttons for bold, italic, headings, lists, links, tables, and more",
+            "Keyboard shortcuts for common formatting: Cmd/Ctrl+B, I, K",
+            "Select text and click a toolbar button to apply or remove formatting",
+            "Requires Hermes IDE v0.5.17+"
+          ]
+        },
+        {
           "version": "1.1.0",
           "date": "2026-03-18",
           "changes": [
-            "Edit markdown files directly in the sidebar with a built-in text editor",
+            "Edit markdown files directly with a built-in text editor",
             "Save changes to disk with Cmd/Ctrl+S or the Save button",
             "Unsaved changes indicator warns before navigating away",
             "Mermaid diagrams render as visual SVG charts in the preview",
