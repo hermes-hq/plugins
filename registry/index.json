@@ -352,6 +352,33 @@
           ]
         }
       ]
+    },
+    {
+      "id": "hermes-hq.cron-builder",
+      "name": "Cron Expression Builder",
+      "version": "1.0.0",
+      "description": "Visual cron expression builder with human-readable descriptions and next run previews",
+      "author": "Hermes IDE",
+      "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 4\"/></svg>",
+      "category": "Development",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/cron-builder-v1.0.0/hermes-hq.cron-builder-1.0.0.tgz",
+      "minAppVersion": "0.5.16",
+      "permissions": [
+        "clipboard.write"
+      ],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-03-19",
+          "changes": [
+            "Visual cron expression builder with dropdowns for each field",
+            "Human-readable description of any cron expression",
+            "Preview next 5 scheduled run times",
+            "Common presets for quick selection",
+            "Copy expression to clipboard"
+          ]
+        }
+      ]
     }
   ]
 }

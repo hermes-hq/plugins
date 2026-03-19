@@ -4,6 +4,11 @@ import {
 	updateEditContent, saveFile, renderMermaidDiagrams,
 	type MarkdownState,
 } from "./activate";
+import {
+	Bold, Italic, Strikethrough, Code, Heading1, Heading2, Heading3,
+	List, ListOrdered, CheckSquare, Quote, Link, Image, Minus, Table,
+	ArrowLeft,
+} from "lucide-react";
 
 interface FileHandlerProps {
 	pluginId: string;
@@ -103,22 +108,24 @@ function insertTable(): FormatAction {
 	};
 }
 
-const FORMATS: { label: string; title: string; action: FormatAction; shortcut?: string }[] = [
-	{ label: "B", title: "Bold (Cmd+B)", action: wrapSelection("**", "**"), shortcut: "b" },
-	{ label: "I", title: "Italic (Cmd+I)", action: wrapSelection("_", "_"), shortcut: "i" },
-	{ label: "S", title: "Strikethrough", action: wrapSelection("~~", "~~") },
-	{ label: "</>", title: "Inline code", action: wrapSelection("`", "`") },
-	{ label: "H1", title: "Heading 1", action: prependLine("# ") },
-	{ label: "H2", title: "Heading 2", action: prependLine("## ") },
-	{ label: "H3", title: "Heading 3", action: prependLine("### ") },
-	{ label: "•", title: "Bullet list", action: prependLine("- ") },
-	{ label: "1.", title: "Numbered list", action: prependLine("1. ") },
-	{ label: "☐", title: "Checkbox", action: prependLine("- [ ] ") },
-	{ label: ">", title: "Blockquote", action: prependLine("> ") },
-	{ label: "🔗", title: "Link (Cmd+K)", action: insertLink(), shortcut: "k" },
-	{ label: "🖼", title: "Image", action: insertImage() },
-	{ label: "—", title: "Horizontal rule", action: insertHr() },
-	{ label: "⊞", title: "Table", action: insertTable() },
+const ICON_SIZE = 15;
+
+const FORMATS: { icon: React.ReactNode; title: string; action: FormatAction; shortcut?: string }[] = [
+	{ icon: <Bold size={ICON_SIZE} />, title: "Bold (Cmd+B)", action: wrapSelection("**", "**"), shortcut: "b" },
+	{ icon: <Italic size={ICON_SIZE} />, title: "Italic (Cmd+I)", action: wrapSelection("_", "_"), shortcut: "i" },
+	{ icon: <Strikethrough size={ICON_SIZE} />, title: "Strikethrough", action: wrapSelection("~~", "~~") },
+	{ icon: <Code size={ICON_SIZE} />, title: "Inline code", action: wrapSelection("`", "`") },
+	{ icon: <Heading1 size={ICON_SIZE} />, title: "Heading 1", action: prependLine("# ") },
+	{ icon: <Heading2 size={ICON_SIZE} />, title: "Heading 2", action: prependLine("## ") },
+	{ icon: <Heading3 size={ICON_SIZE} />, title: "Heading 3", action: prependLine("### ") },
+	{ icon: <List size={ICON_SIZE} />, title: "Bullet list", action: prependLine("- ") },
+	{ icon: <ListOrdered size={ICON_SIZE} />, title: "Numbered list", action: prependLine("1. ") },
+	{ icon: <CheckSquare size={ICON_SIZE} />, title: "Checkbox", action: prependLine("- [ ] ") },
+	{ icon: <Quote size={ICON_SIZE} />, title: "Blockquote", action: prependLine("> ") },
+	{ icon: <Link size={ICON_SIZE} />, title: "Link (Cmd+K)", action: insertLink(), shortcut: "k" },
+	{ icon: <Image size={ICON_SIZE} />, title: "Image", action: insertImage() },
+	{ icon: <Minus size={ICON_SIZE} />, title: "Horizontal rule", action: insertHr() },
+	{ icon: <Table size={ICON_SIZE} />, title: "Table", action: insertTable() },
 ];
 
 // ─── Styles ──────────────────────────────────────────────
@@ -216,11 +223,13 @@ const s = {
 		color: "var(--text-2)",
 		fontFamily: "var(--font-mono)",
 		fontSize: "13px",
-		padding: "4px 10px",
+		padding: "5px 8px",
 		cursor: "pointer" as const,
-		lineHeight: 1.4,
-		minWidth: "30px",
-		textAlign: "center" as const,
+		lineHeight: 1,
+		minWidth: "28px",
+		display: "flex" as const,
+		alignItems: "center" as const,
+		justifyContent: "center" as const,
 	},
 	toolSep: {
 		width: "1px",
@@ -257,12 +266,7 @@ const s = {
 	},
 };
 
-const BackArrow = () => (
-	<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-		<path d="M19 12H5" />
-		<polyline points="12 19 5 12 12 5" />
-	</svg>
-);
+const BackArrow = () => <ArrowLeft size={14} />;
 
 // Group indices for separators in toolbar
 const SEPARATORS_AFTER = new Set([2, 3, 6, 10, 12]);
@@ -374,7 +378,7 @@ export function MarkdownPanel(props: FileHandlerProps) {
 									(e.currentTarget as HTMLButtonElement).style.color = "var(--text-3)";
 								}}
 							>
-								{fmt.label}
+								{fmt.icon}
 							</button>
 							{SEPARATORS_AFTER.has(i) && <div style={s.toolSep} />}
 						</React.Fragment>
