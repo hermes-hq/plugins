@@ -4,11 +4,19 @@ import { marked, type Renderer } from "marked";
 import mermaid from "mermaid";
 
 interface Disposable { dispose(): void; }
-interface PluginPanelProps { pluginId: string; panelId: string; }
+
+interface FileHandlerProps {
+	pluginId: string;
+	filePath: string;
+	content: string;
+	sessionId: string;
+	onBack: () => void;
+}
 
 interface HermesPluginAPI {
 	ui: {
-		registerPanel(panelId: string, component: React.ComponentType<PluginPanelProps>): Disposable;
+		registerPanel(panelId: string, component: React.ComponentType<any>): Disposable;
+		registerFileHandler(extensions: string[], component: React.ComponentType<FileHandlerProps>): Disposable;
 		showPanel(panelId: string): void;
 		hidePanel(panelId: string): void;
 		togglePanel(panelId: string): void;
@@ -71,39 +79,25 @@ function ensureMermaid() {
 
 let api: HermesPluginAPI | null = null;
 let listeners = new Set<() => void>();
-let pollTimer: ReturnType<typeof setInterval> | null = null;
-const isMac = typeof navigator !== "undefined" && navigator.userAgent.includes("Mac");
 
 export interface MarkdownState {
 	filePath: string;
-	workingDirectory: string;
 	content: string;
 	html: string;
-	loading: boolean;
-	error: string | null;
-	lastMtime: number;
-	mdFiles: string[];
-	filesLoading: boolean;
-	view: "preview" | "file-picker" | "edit";
-	pollInterval: number;
+	view: "preview" | "edit";
 	editContent: string;
 	dirty: boolean;
+	onBack: (() => void) | null;
 }
 
 let state: MarkdownState = {
 	filePath: "",
-	workingDirectory: "",
 	content: "",
 	html: "",
-	loading: false,
-	error: null,
-	lastMtime: 0,
-	mdFiles: [],
-	filesLoading: false,
-	view: "file-picker",
-	pollInterval: 2000,
+	view: "preview",
 	editContent: "",
 	dirty: false,
+	onBack: null,
 };
 
 export function getState(): MarkdownState { return { ...state }; }
@@ -115,7 +109,7 @@ function notify() {
 	for (const l of listeners) { try { l(); } catch { /* swallow */ } }
 }
 
-function renderMarkdown(source: string): string {
+export function renderMarkdown(source: string): string {
 	try {
 		return marked.parse(source) as string;
 	} catch {
@@ -123,112 +117,23 @@ function renderMarkdown(source: string): string {
 	}
 }
 
-async function readFile(path: string): Promise<string> {
-	if (!api) throw new Error("Not activated");
-	const result = await api.shell.exec("cat", [path]);
-	if (result.exitCode !== 0) throw new Error(result.stderr || "Failed to read file");
-	return result.stdout;
-}
-
-async function getMtime(path: string): Promise<number> {
-	if (!api) return 0;
-	const args = isMac ? ["-f", "%m", path] : ["-c", "%Y", path];
-	const result = await api.shell.exec("stat", args);
-	if (result.exitCode !== 0) return 0;
-	return parseInt(result.stdout.trim(), 10) || 0;
-}
-
-export async function loadFile(path: string) {
-	if (!api || !path.trim()) return;
-	state = { ...state, filePath: path, loading: true, error: null, view: "preview", editContent: "", dirty: false };
-	notify();
-	try {
-		const content = await readFile(path);
-		const html = renderMarkdown(content);
-		const mtime = await getMtime(path);
-		state = { ...state, content, html, loading: false, lastMtime: mtime };
-		api.storage.set("lastFile", path).catch(() => {});
-		const fileName = path.split("/").pop() || path;
-		api.ui.updateStatusBarItem("markdown-preview.status", {
-			text: `MD: ${fileName}`,
-			tooltip: path,
-		});
-		startPolling();
-	} catch (err) {
-		state = { ...state, loading: false, error: String(err) };
-	}
-	notify();
-}
-
-export async function refreshPreview() {
-	if (state.filePath) await loadFile(state.filePath);
-}
-
-async function pollForChanges() {
-	if (!api || !state.filePath || state.loading) return;
-	// Don't overwrite user edits
-	if (state.view === "edit" || state.dirty) return;
-	try {
-		const mtime = await getMtime(state.filePath);
-		if (mtime > 0 && mtime !== state.lastMtime) {
-			const content = await readFile(state.filePath);
-			const html = renderMarkdown(content);
-			state = { ...state, content, html, lastMtime: mtime };
-			notify();
-		}
-	} catch { /* silent — file may have been deleted */ }
-}
-
-function startPolling() {
-	stopPolling();
-	if (state.pollInterval > 0) {
-		pollTimer = setInterval(pollForChanges, state.pollInterval);
-	}
-}
-
-function stopPolling() {
-	if (pollTimer !== null) {
-		clearInterval(pollTimer);
-		pollTimer = null;
-	}
-}
-
-export async function discoverFiles() {
-	if (!api || !state.workingDirectory) return;
-	state = { ...state, filesLoading: true, mdFiles: [] };
-	notify();
-	try {
-		const result = await api.shell.exec("find", [
-			state.workingDirectory, "-maxdepth", "4", "-name", "*.md", "-type", "f",
-			"-not", "-path", "*/node_modules/*", "-not", "-path", "*/.git/*",
-		]);
-		const files = result.stdout.trim().split("\n").filter(Boolean).sort();
-		state = { ...state, mdFiles: files, filesLoading: false };
-	} catch {
-		state = { ...state, filesLoading: false };
-	}
-	notify();
-}
-
-export function showFilePicker() {
-	state = { ...state, view: "file-picker", editContent: "", dirty: false };
+export function openFile(filePath: string, content: string, onBack: () => void) {
+	const html = renderMarkdown(content);
+	state = { filePath, content, html, view: "preview", editContent: "", dirty: false, onBack };
 	notify();
 }
 
 export function showPreview() {
-	if (!state.filePath) return;
-	// If switching from edit with dirty content, re-render from editContent
 	if (state.view === "edit" && state.dirty) {
 		const html = renderMarkdown(state.editContent);
 		state = { ...state, view: "preview", content: state.editContent, html };
-	} else if (state.html) {
+	} else {
 		state = { ...state, view: "preview" };
 	}
 	notify();
 }
 
 export function showEdit() {
-	if (!state.filePath) return;
 	state = { ...state, view: "edit", editContent: state.content, dirty: false };
 	notify();
 }
@@ -248,9 +153,8 @@ export async function saveFile() {
 			api.ui.showToast(`Save failed: ${result.stderr}`, { type: "error" });
 			return;
 		}
-		const mtime = await getMtime(state.filePath);
 		const html = renderMarkdown(state.editContent);
-		state = { ...state, content: state.editContent, html, dirty: false, lastMtime: mtime };
+		state = { ...state, content: state.editContent, html, dirty: false };
 		notify();
 		api.ui.showToast("File saved", { type: "success", duration: 2000 });
 	} catch (err) {
@@ -283,72 +187,24 @@ export async function activate(pluginApi: HermesPluginAPI) {
 	api = pluginApi;
 	injectStyles();
 
-	api.ui.registerPanel("markdown-preview-panel", MarkdownPanel);
+	// Register as file handler for markdown files
+	if (api.ui.registerFileHandler) {
+		api.subscriptions.push(
+			api.ui.registerFileHandler(["md", "markdown", "mdx"], MarkdownPanel)
+		);
+	}
 
-	api.subscriptions.push(
-		api.commands.register("markdown-preview.open", () => {
-			api!.ui.showPanel("markdown-preview-panel");
-		})
-	);
-	api.subscriptions.push(
-		api.commands.register("markdown-preview.refresh", () => refreshPreview())
-	);
 	api.subscriptions.push(
 		api.commands.register("markdown-preview.save", () => saveFile())
 	);
-
-	// Load settings
-	try {
-		const all = await api.settings.getAll();
-		state.pollInterval = parseInt(String(all.pollInterval), 10) || 2000;
-	} catch { /* defaults */ }
-
-	api.subscriptions.push(
-		api.settings.onDidChange("pollInterval", (v) => {
-			state.pollInterval = parseInt(String(v), 10) || 0;
-			if (state.filePath) startPolling();
-			notify();
-		})
-	);
-
-	// Get initial working directory
-	try {
-		const active = await api.sessions.getActive();
-		if (active?.working_directory) {
-			state.workingDirectory = active.working_directory;
-		}
-	} catch { /* ok */ }
-
-	// Track session changes
-	api.subscriptions.push(
-		api.events.on("session.focus_changed", async () => {
-			try {
-				const active = await api!.sessions.getActive();
-				if (active?.working_directory) {
-					state = { ...state, workingDirectory: active.working_directory };
-					notify();
-				}
-			} catch { /* ok */ }
-		})
-	);
-
-	// Restore last file
-	try {
-		const lastFile = await api.storage.get("lastFile");
-		if (lastFile) {
-			await loadFile(lastFile);
-		}
-	} catch { /* ok */ }
 }
 
 export function deactivate() {
-	stopPolling();
 	api = null;
 	listeners.clear();
 	state = {
-		filePath: "", workingDirectory: "", content: "", html: "",
-		loading: false, error: null, lastMtime: 0, mdFiles: [],
-		filesLoading: false, view: "file-picker", pollInterval: 2000,
-		editContent: "", dirty: false,
+		filePath: "", content: "", html: "",
+		view: "preview", editContent: "", dirty: false,
+		onBack: null,
 	};
 }
