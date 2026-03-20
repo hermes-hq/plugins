@@ -19,7 +19,7 @@
         "id": "uuid-generator-panel",
         "name": "UUID",
         "side": "left",
-        "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"2\" width=\"14\" height=\"14\" rx=\"2\"/><path d=\"M6 6h1.5M10.5 6H12M6 9h6M6 12h3\"/></svg>"
+        "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6.5 3L5 15M13 3l-1.5 12M3 6.5h12M3 11.5h12\"/></svg>"
       }
     ],
     "statusBarItems": [
