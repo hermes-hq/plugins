@@ -166,7 +166,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 	},
 	fileName: {
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		color: "var(--text-2)",
 		fontWeight: 600,
 		overflow: "hidden" as const,
@@ -175,7 +175,7 @@ const s = {
 		flex: 1,
 	},
 	langBadge: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		background: "var(--bg-2)",
 		padding: "1px 6px",
@@ -188,7 +188,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		color: "var(--text-3)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		padding: "2px 8px",
 		cursor: "pointer" as const,
 		flexShrink: 0,
@@ -222,7 +222,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		color: "var(--text-2)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "13px",
+		fontSize: "var(--text-lg)",
 		padding: "5px 8px",
 		cursor: "pointer" as const,
 		lineHeight: 1,
@@ -245,7 +245,7 @@ const s = {
 		border: "none",
 		color: "var(--text-0)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		padding: "12px 16px",
 		outline: "none",
 		resize: "none" as const,
@@ -261,7 +261,7 @@ const s = {
 		flexShrink: 0,
 	},
 	footerText: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 	},
 };
@@ -421,7 +421,7 @@ export function MarkdownPanel(props: FileHandlerProps) {
 			{state.html && (
 				<div
 					ref={contentRef}
-					style={{ ...s.content, fontSize: "14px" }}
+					style={{ ...s.content, fontSize: "var(--text-lg)" }}
 					className="md-preview-content"
 					dangerouslySetInnerHTML={{ __html: state.html }}
 				/>

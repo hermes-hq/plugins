@@ -44,7 +44,7 @@ const s = {
 		gap: "6px",
 	},
 	label: {
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		color: "var(--text-2)",
 		fontWeight: 600,
 		textTransform: "uppercase" as const,
@@ -77,7 +77,7 @@ const s = {
 		outline: "none",
 	},
 	desc: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		marginTop: "-2px",
 		paddingLeft: "58px",
@@ -135,7 +135,7 @@ const s = {
 		lineHeight: "1.5",
 	},
 	copyHint: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		flexShrink: 0,
 		opacity: 0,
@@ -150,7 +150,7 @@ const s = {
 		fontSize: "var(--text-md)",
 	},
 	counter: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		textAlign: "right" as const,
 		padding: "4px 12px",

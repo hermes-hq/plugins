@@ -1,6 +1,6 @@
 {
   "name": "@hermes-hq/plugin-ip-network-info",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "type": "module",
   "scripts": {

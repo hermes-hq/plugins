@@ -1,16 +1,22 @@
 {
   "id": "hermes-hq.github",
   "name": "GitHub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Connect your GitHub account to see PRs, reviews, and notifications",
   "author": "Hermes IDE",
   "main": "dist/index.js",
   "activationEvents": [
-    { "type": "onStartup" }
+    {
+      "type": "onStartup"
+    }
   ],
   "contributes": {
     "commands": [
-      { "command": "github.open", "title": "Open GitHub", "category": "GitHub" }
+      {
+        "command": "github.open",
+        "title": "Open GitHub",
+        "category": "GitHub"
+      }
     ],
     "panels": [
       {
@@ -38,11 +44,26 @@
         "default": "2",
         "order": 1,
         "options": [
-          { "value": "2", "label": "2 minutes" },
-          { "value": "5", "label": "5 minutes" },
-          { "value": "10", "label": "10 minutes" },
-          { "value": "15", "label": "15 minutes" },
-          { "value": "30", "label": "30 minutes" }
+          {
+            "value": "2",
+            "label": "2 minutes"
+          },
+          {
+            "value": "5",
+            "label": "5 minutes"
+          },
+          {
+            "value": "10",
+            "label": "10 minutes"
+          },
+          {
+            "value": "15",
+            "label": "15 minutes"
+          },
+          {
+            "value": "30",
+            "label": "30 minutes"
+          }
         ]
       }
     }
@@ -50,5 +71,8 @@
   "engines": {
     "hermes": ">=0.5.20"
   },
-  "permissions": ["network", "storage"]
+  "permissions": [
+    "network",
+    "storage"
+  ]
 }

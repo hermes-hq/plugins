@@ -23,7 +23,7 @@ const s = {
 		background: "var(--bg-1)",
 		color: "var(--text-1)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		overflow: "hidden",
 	},
 	header: {
@@ -35,7 +35,7 @@ const s = {
 	},
 	headerTitle: {
 		margin: 0,
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		fontWeight: 600,
 		textTransform: "uppercase" as const,
 		color: "var(--text-2)",
@@ -100,7 +100,7 @@ const s = {
 	},
 	categoryHeader: {
 		padding: "8px 12px 4px",
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		fontWeight: 600,
 		textTransform: "uppercase" as const,
 		color: "var(--text-3)",
@@ -115,18 +115,18 @@ const s = {
 		borderBottom: "1px solid var(--border)",
 	},
 	articleTitle: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		lineHeight: 1.4,
 		overflow: "hidden",
 		textOverflow: "ellipsis",
 		whiteSpace: "nowrap" as const,
 	},
 	articleMeta: {
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		color: "var(--text-3)",
 	},
 	articleDesc: {
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		color: "var(--text-2)",
 		lineHeight: 1.3,
 		overflow: "hidden",
@@ -143,7 +143,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		color: "var(--text-1)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		outline: "none",
 		boxSizing: "border-box" as const,
 	},
@@ -155,7 +155,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		color: "var(--text-1)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		outline: "none",
 		boxSizing: "border-box" as const,
 	},
@@ -166,7 +166,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		padding: "6px 12px",
 		cursor: "pointer",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		fontFamily: "var(--font-mono)",
 		fontWeight: 500,
 	},
@@ -177,7 +177,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		padding: "6px 12px",
 		cursor: "pointer",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		fontFamily: "var(--font-mono)",
 		fontWeight: 500,
 	},
@@ -188,7 +188,7 @@ const s = {
 		padding: "12px",
 	},
 	label: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-2)",
 		marginBottom: "2px",
 	},
@@ -204,14 +204,14 @@ const s = {
 		overflow: "hidden",
 	},
 	suggestedTitle: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		fontWeight: 500,
 		overflow: "hidden",
 		textOverflow: "ellipsis",
 		whiteSpace: "nowrap" as const,
 	},
 	suggestedDesc: {
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		color: "var(--text-3)",
 		overflow: "hidden",
 		textOverflow: "ellipsis",
@@ -226,7 +226,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		color: "var(--text-1)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		outline: "none",
 		resize: "vertical" as const,
 		boxSizing: "border-box" as const,
@@ -403,7 +403,7 @@ function ArticleListView({ state }: { state: FeedState }) {
 							{feed.title}
 						</h3>
 						{(feed.siteUrl || feed.url) && (
-							<div style={{ fontSize: "var(--text-sm)", color: "var(--text-3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+							<div style={{ fontSize: "var(--text-base)", color: "var(--text-3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
 								{feed.siteUrl || feed.url}
 							</div>
 						)}
@@ -644,7 +644,7 @@ function ImportExportView() {
 			</div>
 			<div style={s.form}>
 				<div style={s.label}>Export OPML</div>
-				<p style={{ margin: 0, fontSize: "var(--text-sm)", color: "var(--text-3)" }}>
+				<p style={{ margin: 0, fontSize: "var(--text-base)", color: "var(--text-3)" }}>
 					Copy your feed subscriptions as OPML to import into other readers.
 				</p>
 				<button
@@ -661,7 +661,7 @@ function ImportExportView() {
 				<div style={{ borderTop: "1px solid var(--border)", margin: "8px 0" }} />
 
 				<div style={s.label}>Import OPML</div>
-				<p style={{ margin: 0, fontSize: "var(--text-sm)", color: "var(--text-3)" }}>
+				<p style={{ margin: 0, fontSize: "var(--text-base)", color: "var(--text-3)" }}>
 					Paste OPML content below or import from clipboard.
 				</p>
 				<textarea

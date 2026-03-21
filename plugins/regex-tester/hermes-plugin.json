@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.regex-tester",
   "name": "Regex Tester",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Test regular expressions with live match highlighting, capture groups, and common presets",
   "author": "Hermes IDE",
   "main": "dist/index.js",

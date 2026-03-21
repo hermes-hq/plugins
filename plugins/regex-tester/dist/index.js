@@ -49,7 +49,7 @@ var __hermes_plugin__ = function(exports, React2) {
       gap: "6px"
     },
     label: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       fontWeight: 600,
       textTransform: "uppercase",
@@ -75,7 +75,7 @@ var __hermes_plugin__ = function(exports, React2) {
       borderRadius: "var(--radius)",
       color: "var(--accent)",
       fontFamily: "var(--font-mono)",
-      fontSize: "var(--text-sm)",
+      fontSize: "var(--text-base)",
       padding: "6px 6px",
       outline: "none",
       textAlign: "center"
@@ -102,7 +102,7 @@ var __hermes_plugin__ = function(exports, React2) {
       borderRadius: "var(--radius-sm)",
       color: "var(--text-2)",
       fontFamily: "var(--font-mono)",
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       padding: "2px 6px",
       cursor: "pointer",
       whiteSpace: "nowrap"
@@ -113,7 +113,7 @@ var __hermes_plugin__ = function(exports, React2) {
       borderRadius: "var(--radius-sm)",
       color: "var(--text-2)",
       fontFamily: "var(--font-mono)",
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       padding: "2px 8px",
       cursor: "pointer"
     },
@@ -126,13 +126,13 @@ var __hermes_plugin__ = function(exports, React2) {
       gap: "8px"
     },
     matchCount: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       fontWeight: 600
     },
     highlightArea: {
       fontFamily: "var(--font-mono)",
-      fontSize: "var(--text-sm)",
+      fontSize: "var(--text-base)",
       lineHeight: 1.6,
       color: "var(--text-1)",
       wordBreak: "break-all",
@@ -150,7 +150,7 @@ var __hermes_plugin__ = function(exports, React2) {
       gap: "4px"
     },
     groupTitle: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       fontWeight: 600,
       textTransform: "uppercase",
@@ -158,7 +158,7 @@ var __hermes_plugin__ = function(exports, React2) {
       marginTop: "4px"
     },
     groupRow: {
-      fontSize: "var(--text-sm)",
+      fontSize: "var(--text-base)",
       color: "var(--text-1)",
       fontFamily: "var(--font-mono)",
       padding: "2px 6px",
@@ -172,7 +172,7 @@ var __hermes_plugin__ = function(exports, React2) {
       minWidth: "30px"
     },
     error: {
-      fontSize: "var(--text-sm)",
+      fontSize: "var(--text-base)",
       color: "var(--red, #f87171)",
       padding: "6px 8px",
       background: "var(--red-dim, rgba(248,113,113,0.1))",
@@ -191,7 +191,7 @@ var __hermes_plugin__ = function(exports, React2) {
       padding: "4px 12px",
       borderTop: "1px solid var(--border)",
       flexShrink: 0,
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       display: "flex",
       justifyContent: "space-between"

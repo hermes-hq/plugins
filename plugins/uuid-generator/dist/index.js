@@ -174,7 +174,7 @@ var __hermes_plugin__ = function(exports, React2) {
       gap: "6px"
     },
     label: {
-      fontSize: "var(--text-sm)",
+      fontSize: "var(--text-base)",
       color: "var(--text-2)",
       fontWeight: 600,
       textTransform: "uppercase",
@@ -259,7 +259,7 @@ var __hermes_plugin__ = function(exports, React2) {
       lineHeight: "1.5"
     },
     copyHint: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       flexShrink: 0,
       opacity: 0,
@@ -274,7 +274,7 @@ var __hermes_plugin__ = function(exports, React2) {
       fontSize: "var(--text-md)"
     },
     counter: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       textAlign: "right",
       padding: "4px 12px",

@@ -38,7 +38,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 	},
 	sessionLabel: {
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		color: "var(--text-2)",
 		fontWeight: 600,
 		overflow: "hidden" as const,
@@ -52,7 +52,7 @@ const s = {
 		borderRadius: "var(--radius-sm)",
 		color: "var(--text-3)",
 		fontFamily: "var(--font-mono)",
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		padding: "2px 8px",
 		cursor: "pointer" as const,
 		flexShrink: 0,
@@ -80,7 +80,7 @@ const s = {
 		flexShrink: 0,
 	},
 	footerText: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 	},
 	empty: {
@@ -109,7 +109,7 @@ const s = {
 		gap: "2px",
 	},
 	noteRowName: {
-		fontSize: "var(--text-sm)",
+		fontSize: "var(--text-base)",
 		fontWeight: 600,
 		color: "var(--text-1)",
 		overflow: "hidden" as const,
@@ -120,14 +120,14 @@ const s = {
 		color: "var(--accent)",
 	},
 	noteRowPreview: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		overflow: "hidden" as const,
 		textOverflow: "ellipsis" as const,
 		whiteSpace: "nowrap" as const,
 	},
 	noteRowMeta: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		opacity: 0.6,
 	},

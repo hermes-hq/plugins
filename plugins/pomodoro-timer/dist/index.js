@@ -72,7 +72,7 @@ var __hermes_plugin__ = function(exports, React2) {
       lineHeight: 1
     },
     phase: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       textTransform: "uppercase",
       letterSpacing: "1px",
@@ -121,13 +121,13 @@ var __hermes_plugin__ = function(exports, React2) {
       color: "var(--accent)"
     },
     statLabel: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       textTransform: "uppercase",
       letterSpacing: "0.5px"
     },
     hint: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       textAlign: "center",
       lineHeight: 1.5,

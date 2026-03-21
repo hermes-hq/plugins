@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.session-notes",
   "name": "Session Notes",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Markdown scratchpad for each terminal session with auto-save and session-aware switching",
   "author": "Hermes IDE",
   "main": "dist/index.js",

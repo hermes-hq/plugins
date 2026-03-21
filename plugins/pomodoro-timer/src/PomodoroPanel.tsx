@@ -65,7 +65,7 @@ const s = {
 		lineHeight: 1,
 	},
 	phase: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		textTransform: "uppercase" as const,
 		letterSpacing: "1px",
@@ -114,13 +114,13 @@ const s = {
 		color: "var(--accent)",
 	},
 	statLabel: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		textTransform: "uppercase" as const,
 		letterSpacing: "0.5px",
 	},
 	hint: {
-		fontSize: "var(--text-xs)",
+		fontSize: "var(--text-sm)",
 		color: "var(--text-3)",
 		textAlign: "center" as const,
 		lineHeight: 1.5,

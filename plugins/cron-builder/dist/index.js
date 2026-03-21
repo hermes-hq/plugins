@@ -541,7 +541,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			gap: "6px"
 		},
 		sectionTitle: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-2)",
 			fontWeight: 600,
 			textTransform: "uppercase",
@@ -603,7 +603,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			gap: "6px"
 		},
 		fieldLabel: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-2)",
 			fontWeight: 600,
 			minWidth: "70px",
@@ -615,7 +615,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			borderRadius: "var(--radius)",
 			color: "var(--text-0)",
 			fontFamily: "var(--font-mono)",
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			padding: "4px 6px",
 			outline: "none",
 			cursor: "pointer"
@@ -627,7 +627,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			borderRadius: "var(--radius)",
 			color: "var(--text-0)",
 			fontFamily: "var(--font-mono)",
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			padding: "4px 6px",
 			outline: "none"
 		},
@@ -639,7 +639,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			borderRadius: "var(--radius)",
 			color: "var(--text-0)",
 			fontFamily: "var(--font-mono)",
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			padding: "4px 6px",
 			outline: "none",
 			cursor: "pointer"
@@ -655,13 +655,13 @@ var __hermes_plugin__ = (function(exports, react) {
 			borderRadius: "var(--radius)",
 			color: "var(--text-1)",
 			fontFamily: "var(--font-mono)",
-			fontSize: "var(--text-xs)",
+			fontSize: "var(--text-sm)",
 			padding: "4px 8px",
 			cursor: "pointer",
 			whiteSpace: "nowrap"
 		},
 		runItem: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-1)",
 			fontFamily: "var(--font-mono)",
 			padding: "3px 6px",
@@ -674,15 +674,15 @@ var __hermes_plugin__ = (function(exports, react) {
 			gap: "3px"
 		},
 		errorText: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--red, #f44)"
 		},
 		muted: {
-			fontSize: "var(--text-xs)",
+			fontSize: "var(--text-sm)",
 			color: "var(--text-3)"
 		},
 		inlineLabel: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-3)"
 		}
 	};

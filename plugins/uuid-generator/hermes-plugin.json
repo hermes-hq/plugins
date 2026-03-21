@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.uuid-generator",
   "name": "UUID Generator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Generate UUIDs in all standard versions (v1, v4, v5, v7) with batch support",
   "author": "Hermes IDE",
   "main": "dist/index.js",

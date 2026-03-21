@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.rss-reader",
   "name": "RSS Feed Reader",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Subscribe to RSS and Atom feeds, browse articles, and get notified of new content without leaving the terminal",
   "author": "Hermes IDE",
   "main": "dist/index.js",

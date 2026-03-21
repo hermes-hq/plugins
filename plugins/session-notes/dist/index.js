@@ -54,7 +54,7 @@ var __hermes_plugin__ = function(exports, React2) {
       borderRadius: "var(--radius-sm)"
     },
     sessionLabel: {
-      fontSize: "var(--text-sm)",
+      fontSize: "var(--text-base)",
       color: "var(--text-2)",
       fontWeight: 600,
       overflow: "hidden",
@@ -68,7 +68,7 @@ var __hermes_plugin__ = function(exports, React2) {
       borderRadius: "var(--radius-sm)",
       color: "var(--text-3)",
       fontFamily: "var(--font-mono)",
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       padding: "2px 8px",
       cursor: "pointer",
       flexShrink: 0,
@@ -96,7 +96,7 @@ var __hermes_plugin__ = function(exports, React2) {
       flexShrink: 0
     },
     footerText: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)"
     },
     empty: {
@@ -125,7 +125,7 @@ var __hermes_plugin__ = function(exports, React2) {
       gap: "2px"
     },
     noteRowName: {
-      fontSize: "var(--text-sm)",
+      fontSize: "var(--text-base)",
       fontWeight: 600,
       color: "var(--text-1)",
       overflow: "hidden",
@@ -136,14 +136,14 @@ var __hermes_plugin__ = function(exports, React2) {
       color: "var(--accent)"
     },
     noteRowPreview: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       overflow: "hidden",
       textOverflow: "ellipsis",
       whiteSpace: "nowrap"
     },
     noteRowMeta: {
-      fontSize: "var(--text-xs)",
+      fontSize: "var(--text-sm)",
       color: "var(--text-3)",
       opacity: 0.6
     }

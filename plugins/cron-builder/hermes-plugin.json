@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.cron-builder",
   "name": "Cron Expression Builder",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Visual cron expression builder with human-readable descriptions and next run previews",
   "author": "Hermes IDE",
   "main": "dist/index.js",

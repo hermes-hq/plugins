@@ -99,7 +99,7 @@ var __hermes_plugin__ = (function(exports, react) {
 					dragging.current = true;
 					const rect = cardRef.current.getBoundingClientRect();
 					const ghost = document.createElement("div");
-					ghost.style.cssText = `position:fixed;z-index:9999;pointer-events:none;width:${Math.min(rect.width, 280)}px;padding:8px 10px;background:var(--bg-2);border:1px solid var(--accent);border-radius:6px;opacity:0.92;box-shadow:0 4px 16px rgba(0,0,0,0.35);font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-0);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
+					ghost.style.cssText = `position:fixed;z-index:9999;pointer-events:none;width:${Math.min(rect.width, 280)}px;padding:8px 10px;background:var(--bg-2);border:1px solid var(--accent);border-radius:6px;opacity:0.92;box-shadow:0 4px 16px rgba(0,0,0,0.35);font-family:var(--font-mono);font-size:var(--text-base);color:var(--text-0);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
 					ghost.textContent = card.title;
 					document.body.appendChild(ghost);
 					drag = {
@@ -204,7 +204,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			gap: "4px",
 			alignItems: "center"
 		} }, react.createElement("span", { style: {
-			fontSize: "9px",
+			fontSize: "var(--text-xs)",
 			color: "var(--text-3)"
 		} }, "Sure?"), react.createElement("button", {
 			style: S.btnDelete,
@@ -230,7 +230,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			...S.badge,
 			background: PRIORITY_COLORS[card.priority]
 		} }, PRIORITY_LABELS[card.priority]), card.dueDate && react.createElement("span", { style: {
-			fontSize: "9px",
+			fontSize: "var(--text-xs)",
 			color: overdue ? "#f87171" : "var(--text-3)"
 		} }, formatDate(card.dueDate))), card.description && react.createElement("div", { style: S.cardDesc }, card.description));
 	}
@@ -369,7 +369,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				setConfirmDel(null);
 			}
 		}, react.createElement("span", { style: { fontWeight: 600 } }, activeBoard?.name ?? "Select board"), react.createElement("span", { style: {
-			fontSize: "8px",
+			fontSize: "var(--text-xs)",
 			marginLeft: "4px",
 			opacity: .5
 		} }, open ? "▲" : "▼")), react.createElement("button", {
@@ -394,13 +394,13 @@ var __hermes_plugin__ = (function(exports, react) {
 			style: {
 				...S.input,
 				margin: "0 0 4px",
-				fontSize: "10px"
+				fontSize: "var(--text-sm)"
 			},
 			value: search,
 			onChange: (e) => setSearch(e.target.value),
 			placeholder: "Search boards..."
 		}), react.createElement("div", { style: S.dropdownList }, sorted.length === 0 && react.createElement("div", { style: {
-			fontSize: "10px",
+			fontSize: "var(--text-sm)",
 			color: "var(--text-3)",
 			padding: "8px",
 			textAlign: "center"
@@ -430,12 +430,12 @@ var __hermes_plugin__ = (function(exports, react) {
 				textOverflow: "ellipsis",
 				whiteSpace: "nowrap"
 			} }, b.name), react.createElement("span", { style: {
-				fontSize: "8px",
+				fontSize: "var(--text-xs)",
 				color: "var(--text-3)",
 				flexShrink: 0
 			} }, `${taskCount} · ${date}`));
 		})), boards.length > 0 && react.createElement("div", { style: {
-			fontSize: "8px",
+			fontSize: "var(--text-xs)",
 			color: "var(--text-3)",
 			padding: "4px 6px",
 			borderTop: "1px solid var(--border)",
@@ -445,11 +445,11 @@ var __hermes_plugin__ = (function(exports, react) {
 	function EmptyState() {
 		const presets = getBoardPresets();
 		return react.createElement("div", { style: S.empty }, react.createElement("div", { style: {
-			fontSize: "var(--text-base)",
+			fontSize: "var(--text-md)",
 			fontWeight: 600,
 			marginBottom: "6px"
 		} }, "Create your first board"), react.createElement("div", { style: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-3)",
 			marginBottom: "16px",
 			lineHeight: 1.5
@@ -522,7 +522,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				padding: "0 12px 0 0"
 			},
 			taskCount: {
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-3)",
 				marginLeft: "auto",
 				flexShrink: 0
@@ -539,7 +539,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				cursor: "pointer",
 				color: "var(--text-0)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-base)",
+				fontSize: "var(--text-md)",
 				padding: "8px 10px",
 				display: "flex",
 				alignItems: "center"
@@ -549,7 +549,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				border: "none",
 				color: "var(--text-3)",
 				cursor: "pointer",
-				fontSize: "14px",
+				fontSize: "var(--text-md)",
 				padding: "4px 6px",
 				lineHeight: 1,
 				opacity: .6
@@ -559,7 +559,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				border: "none",
 				color: "var(--text-3)",
 				cursor: "pointer",
-				fontSize: "18px",
+				fontSize: "var(--text-2xl)",
 				padding: "4px 8px",
 				lineHeight: 1
 			},
@@ -590,7 +590,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				padding: "7px 8px",
 				borderRadius: "4px",
 				cursor: "pointer",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-1)",
 				transition: "background 0.08s"
 			},
@@ -612,7 +612,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "5px",
 				color: "var(--text-1)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "6px 14px",
 				cursor: "pointer"
 			},
@@ -647,13 +647,13 @@ var __hermes_plugin__ = (function(exports, react) {
 			},
 			colName: {
 				fontWeight: 600,
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-1)",
 				textTransform: "uppercase",
 				letterSpacing: "0.5px"
 			},
 			colCount: {
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				color: "var(--text-3)",
 				background: "var(--bg-2)",
 				borderRadius: "8px",
@@ -672,7 +672,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				display: "flex",
 				alignItems: "center",
 				justifyContent: "center",
-				fontSize: "16px",
+				fontSize: "var(--text-xl)",
 				lineHeight: 1,
 				padding: 0
 			},
@@ -695,7 +695,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				maxWidth: "300px"
 			},
 			cardTitle: {
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				fontWeight: 500,
 				color: "var(--text-0)",
 				lineHeight: 1.4
@@ -707,7 +707,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				marginTop: "4px"
 			},
 			badge: {
-				fontSize: "9px",
+				fontSize: "var(--text-xs)",
 				fontWeight: 700,
 				color: "#000",
 				padding: "1px 5px",
@@ -717,7 +717,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				lineHeight: "15px"
 			},
 			cardDesc: {
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				color: "var(--text-3)",
 				marginTop: "3px",
 				lineHeight: 1.4,
@@ -728,7 +728,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			emptyCol: {
 				textAlign: "center",
 				color: "var(--text-3)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "20px 0",
 				opacity: .4
 			},
@@ -738,7 +738,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "6px",
 				padding: "8px 10px",
 				cursor: "pointer",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-3)",
 				textAlign: "center",
 				transition: "border-color 0.1s, color 0.1s",
@@ -776,7 +776,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "var(--text-0)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "5px 8px",
 				outline: "none",
 				width: "100%",
@@ -793,7 +793,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "var(--text-0)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "4px 6px",
 				outline: "none",
 				cursor: "pointer"
@@ -804,7 +804,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				gap: "8px"
 			},
 			formLabel: {
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-3)",
 				width: "55px",
 				flexShrink: 0
@@ -821,7 +821,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "#fff",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "5px 12px",
 				cursor: "pointer"
 			},
@@ -831,7 +831,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "var(--text-3)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "5px 10px",
 				cursor: "pointer"
 			},
@@ -841,7 +841,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "#f87171",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "5px 10px",
 				cursor: "pointer"
 			}

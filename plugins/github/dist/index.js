@@ -69,11 +69,11 @@ var __hermes_plugin__ = (function(exports, react) {
 		};
 		if (!s.deviceCode) return react.createElement("div", { style: S.center }, react.createElement("div", { style: S.spinner }), react.createElement("div", { style: {
 			marginTop: "8px",
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-3)"
 		} }, "Starting authorization..."));
 		return react.createElement("div", { style: S.center }, react.createElement("div", { style: {
-			fontSize: "var(--text-xs)",
+			fontSize: "var(--text-sm)",
 			color: "var(--text-3)",
 			textTransform: "uppercase",
 			letterSpacing: "1px",
@@ -88,7 +88,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			onClick: copyCode,
 			title: "Copy code"
 		}, copied ? "Copied!" : "Copy")), react.createElement("div", { style: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-2)",
 			marginTop: "12px",
 			textAlign: "center",
@@ -104,7 +104,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			gap: "6px",
 			marginTop: "20px"
 		} }, react.createElement("div", { style: S.spinner }), react.createElement("span", { style: {
-			fontSize: "var(--text-xs)",
+			fontSize: "var(--text-sm)",
 			color: "var(--text-3)"
 		} }, "Waiting for authorization...")), react.createElement("button", {
 			style: {
@@ -143,7 +143,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			whiteSpace: "nowrap"
 		} }, label), react.createElement("span", { style: {
 			opacity: .5,
-			fontSize: "10px"
+			fontSize: "var(--text-sm)"
 		} }, open ? "▲" : "▼")), open && react.createElement("div", { style: S.filterDropdown }, active.size > 0 && react.createElement("button", {
 			style: S.filterClearBtn,
 			onClick: () => {
@@ -173,7 +173,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			rel: "noopener noreferrer",
 			style: S.prLink
 		}, react.createElement("div", { style: S.prHeader }, react.createElement("span", { style: S.prRepo }, repoShort(pr.repo_full_name ?? "")), react.createElement("span", { style: S.prNumber }, `#${pr.number}`), pr.draft && react.createElement("span", { style: S.draftBadge }, "Draft"), react.createElement("span", { style: { flex: 1 } }), react.createElement("span", { style: {
-			fontSize: "var(--text-xs)",
+			fontSize: "var(--text-sm)",
 			color: "var(--text-3)"
 		} }, timeAgo(pr.updated_at))), react.createElement("div", { style: S.prTitle }, pr.title), react.createElement("div", { style: S.prMeta }, react.createElement("span", null, pr.user.login), react.createElement("span", { style: { opacity: .3 } }, "·"), react.createElement("span", { style: { opacity: .6 } }, repoOwner(pr.repo_full_name ?? "")))), showIgnore && react.createElement("button", {
 			style: S.ignoreBtn,
@@ -222,7 +222,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			background: "var(--accent)",
 			color: "#000"
 		} }, REASON_LABELS[notif.reason] ?? notif.reason), react.createElement("span", { style: { flex: 1 } }), react.createElement("span", { style: {
-			fontSize: "var(--text-xs)",
+			fontSize: "var(--text-sm)",
 			color: "var(--text-3)"
 		} }, timeAgo(notif.updated_at))), react.createElement("div", { style: S.prTitle }, notif.subject.title), react.createElement("div", { style: S.prMeta }, react.createElement("span", null, notif.subject.type), notif.unread && react.createElement("span", { style: S.unreadDot })));
 	}
@@ -252,7 +252,7 @@ var __hermes_plugin__ = (function(exports, react) {
 	function DisconnectButton() {
 		const [confirming, setConfirming] = useState(false);
 		if (confirming) return react.createElement("div", { style: S.disconnectRow }, react.createElement("span", { style: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			color: "var(--text-2)"
 		} }, "Disconnect GitHub?"), react.createElement("div", { style: {
 			display: "flex",
@@ -285,7 +285,7 @@ var __hermes_plugin__ = (function(exports, react) {
 			src: s.user.avatar_url,
 			style: S.avatar
 		}), react.createElement("span", { style: {
-			fontSize: "var(--text-sm)",
+			fontSize: "var(--text-base)",
 			fontWeight: 500
 		} }, s.user.login)), react.createElement("div", { style: {
 			display: "flex",
@@ -385,7 +385,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderBottom: "2px solid transparent",
 				color: "var(--text-3)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "10px 4px",
 				cursor: "pointer",
 				display: "flex",
@@ -400,7 +400,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				fontWeight: 600
 			},
 			tabBadge: {
-				fontSize: "10px",
+				fontSize: "var(--text-sm)",
 				background: "var(--accent)",
 				color: "#000",
 				borderRadius: "8px",
@@ -426,7 +426,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "6px",
 				color: "var(--text-1)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "7px 10px",
 				cursor: "pointer",
 				outline: "none"
@@ -452,7 +452,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				padding: "7px 8px",
 				borderRadius: "5px",
 				cursor: "pointer",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-1)",
 				transition: "background 0.08s"
 			},
@@ -481,7 +481,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				border: "none",
 				color: "var(--accent)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				padding: "6px 8px",
 				cursor: "pointer",
 				textAlign: "left",
@@ -518,12 +518,12 @@ var __hermes_plugin__ = (function(exports, react) {
 				marginBottom: "4px"
 			},
 			prRepo: {
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--accent)",
 				fontWeight: 500
 			},
 			prNumber: {
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-3)"
 			},
 			prTitle: {
@@ -537,11 +537,11 @@ var __hermes_plugin__ = (function(exports, react) {
 				alignItems: "center",
 				gap: "5px",
 				marginTop: "4px",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-3)"
 			},
 			draftBadge: {
-				fontSize: "10px",
+				fontSize: "var(--text-sm)",
 				fontWeight: 600,
 				background: "var(--bg-3)",
 				color: "var(--text-3)",
@@ -563,7 +563,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "var(--text-3)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				padding: "4px 8px",
 				cursor: "pointer",
 				flexShrink: 0,
@@ -589,7 +589,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "6px",
 				color: "var(--text-2)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				padding: "10px",
 				cursor: "pointer",
 				marginTop: "4px",
@@ -601,7 +601,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "6px",
 				color: "var(--text-3)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				cursor: "pointer",
 				padding: "8px 12px",
 				width: "100%",
@@ -635,7 +635,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				color: "var(--text-0)"
 			},
 			connectDesc: {
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--text-3)",
 				textAlign: "center",
 				maxWidth: "220px",
@@ -648,7 +648,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "6px",
 				color: "var(--bg-1)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				fontWeight: 600,
 				padding: "8px 20px",
 				cursor: "pointer"
@@ -671,14 +671,14 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "6px",
 				color: "#000",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				fontWeight: 600,
 				padding: "8px 14px",
 				cursor: "pointer",
 				whiteSpace: "nowrap"
 			},
 			ghLink: {
-				fontSize: "var(--text-sm)",
+				fontSize: "var(--text-base)",
 				color: "var(--accent)",
 				textDecoration: "none",
 				marginTop: "6px",
@@ -699,7 +699,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "var(--text-3)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				padding: "4px 10px",
 				cursor: "pointer"
 			},
@@ -714,7 +714,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				border: "none",
 				color: "var(--text-3)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				cursor: "pointer",
 				opacity: .5,
 				padding: "4px 8px"
@@ -725,7 +725,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "#f87171",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				padding: "4px 12px",
 				cursor: "pointer"
 			},
@@ -735,7 +735,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				color: "var(--text-3)",
 				fontFamily: "var(--font-mono)",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				padding: "4px 12px",
 				cursor: "pointer"
 			},
@@ -745,7 +745,7 @@ var __hermes_plugin__ = (function(exports, react) {
 				borderRadius: "4px",
 				padding: "6px 10px",
 				margin: "4px 8px",
-				fontSize: "var(--text-xs)",
+				fontSize: "var(--text-sm)",
 				color: "#f87171",
 				display: "flex",
 				alignItems: "center",

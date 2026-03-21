@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.ip-network-info",
   "name": "IP & Network Info",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Display public IP address, DNS lookups, and WHOIS information",
   "author": "Hermes IDE",
   "main": "dist/index.js",

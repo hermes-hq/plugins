@@ -91,7 +91,7 @@ function CardView({ card, columnId, columns }: { card: Card; columnId: string; c
 				dragging.current = true;
 				const rect = cardRef.current!.getBoundingClientRect();
 				const ghost = document.createElement("div");
-				ghost.style.cssText = `position:fixed;z-index:9999;pointer-events:none;width:${Math.min(rect.width, 280)}px;padding:8px 10px;background:var(--bg-2);border:1px solid var(--accent);border-radius:6px;opacity:0.92;box-shadow:0 4px 16px rgba(0,0,0,0.35);font-family:var(--font-mono);font-size:var(--text-sm);color:var(--text-0);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
+				ghost.style.cssText = `position:fixed;z-index:9999;pointer-events:none;width:${Math.min(rect.width, 280)}px;padding:8px 10px;background:var(--bg-2);border:1px solid var(--accent);border-radius:6px;opacity:0.92;box-shadow:0 4px 16px rgba(0,0,0,0.35);font-family:var(--font-mono);font-size:var(--text-base);color:var(--text-0);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;`;
 				ghost.textContent = card.title;
 				document.body.appendChild(ghost);
 				drag = { cardId: card.id, ghostEl: ghost, offsetX: me.clientX - rect.left, offsetY: me.clientY - rect.top, hoverCol: null, hoverIndex: 0 };
@@ -160,7 +160,7 @@ function CardView({ card, columnId, columns }: { card: Card; columnId: string; c
 				React.createElement("div", { style: { flex: 1 } }),
 				confirmDel
 					? React.createElement("div", { style: { display: "flex", gap: "4px", alignItems: "center" } },
-						React.createElement("span", { style: { fontSize: "9px", color: "var(--text-3)" } }, "Sure?"),
+						React.createElement("span", { style: { fontSize: "var(--text-xs)", color: "var(--text-3)" } }, "Sure?"),
 						React.createElement("button", { style: S.btnDelete, onClick: () => deleteCard(card.id) }, "Yes"),
 						React.createElement("button", { style: S.btnCancel, onClick: () => setConfirmDel(false) }, "No"))
 					: React.createElement("button", { style: S.btnDelete, onClick: () => setConfirmDel(true) }, "Delete"),
@@ -175,7 +175,7 @@ function CardView({ card, columnId, columns }: { card: Card; columnId: string; c
 		React.createElement("div", { style: S.cardTitle }, card.title),
 		(card.priority !== "none" || card.dueDate) && React.createElement("div", { style: S.cardMeta },
 			card.priority !== "none" && React.createElement("span", { style: { ...S.badge, background: PRIORITY_COLORS[card.priority] } }, PRIORITY_LABELS[card.priority]),
-			card.dueDate && React.createElement("span", { style: { fontSize: "9px", color: overdue ? "#f87171" : "var(--text-3)" } }, formatDate(card.dueDate)),
+			card.dueDate && React.createElement("span", { style: { fontSize: "var(--text-xs)", color: overdue ? "#f87171" : "var(--text-3)" } }, formatDate(card.dueDate)),
 		),
 		card.description && React.createElement("div", { style: S.cardDesc }, card.description),
 	);
@@ -290,7 +290,7 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 	return React.createElement("div", { style: S.selector, ref: dropRef },
 		React.createElement("button", { style: S.selectorBtn, onClick: () => { setOpen(!open); setSearch(""); setConfirmDel(null); } },
 			React.createElement("span", { style: { fontWeight: 600 } }, activeBoard?.name ?? "Select board"),
-			React.createElement("span", { style: { fontSize: "8px", marginLeft: "4px", opacity: 0.5 } }, open ? "▲" : "▼"),
+			React.createElement("span", { style: { fontSize: "var(--text-xs)", marginLeft: "4px", opacity: 0.5 } }, open ? "▲" : "▼"),
 		),
 		React.createElement("button", { style: S.newTabBtn, onClick: onNew, title: "New board" }, "+"),
 		activeBoard && React.createElement("button", {
@@ -306,13 +306,13 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 		open && React.createElement("div", { style: S.dropdown },
 			boards.length > 5 && React.createElement("input", {
 				ref: searchRef,
-				style: { ...S.input, margin: "0 0 4px", fontSize: "10px" },
+				style: { ...S.input, margin: "0 0 4px", fontSize: "var(--text-sm)" },
 				value: search,
 				onChange: (e: any) => setSearch(e.target.value),
 				placeholder: "Search boards...",
 			}),
 			React.createElement("div", { style: S.dropdownList },
-				sorted.length === 0 && React.createElement("div", { style: { fontSize: "10px", color: "var(--text-3)", padding: "8px", textAlign: "center" as const } }, "No boards found"),
+				sorted.length === 0 && React.createElement("div", { style: { fontSize: "var(--text-sm)", color: "var(--text-3)", padding: "8px", textAlign: "center" as const } }, "No boards found"),
 				...sorted.map(b => {
 					const isActive = b.id === activeId;
 					const date = new Date(b.createdAt).toLocaleDateString("en", { month: "short", day: "numeric" });
@@ -323,11 +323,11 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 						onClick: () => { switchBoard(b.id); setOpen(false); },
 					},
 						React.createElement("span", { style: { flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const } }, b.name),
-						React.createElement("span", { style: { fontSize: "8px", color: "var(--text-3)", flexShrink: 0 } }, `${taskCount} · ${date}`),
+						React.createElement("span", { style: { fontSize: "var(--text-xs)", color: "var(--text-3)", flexShrink: 0 } }, `${taskCount} · ${date}`),
 					);
 				}),
 			),
-			boards.length > 0 && React.createElement("div", { style: { fontSize: "8px", color: "var(--text-3)", padding: "4px 6px", borderTop: "1px solid var(--border)", textAlign: "center" as const } }, `${boards.length} board${boards.length !== 1 ? "s" : ""}`),
+			boards.length > 0 && React.createElement("div", { style: { fontSize: "var(--text-xs)", color: "var(--text-3)", padding: "4px 6px", borderTop: "1px solid var(--border)", textAlign: "center" as const } }, `${boards.length} board${boards.length !== 1 ? "s" : ""}`),
 		),
 	);
 }
@@ -337,8 +337,8 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 function EmptyState() {
 	const presets = getBoardPresets();
 	return React.createElement("div", { style: S.empty },
-		React.createElement("div", { style: { fontSize: "var(--text-base)", fontWeight: 600, marginBottom: "6px" } }, "Create your first board"),
-		React.createElement("div", { style: { fontSize: "var(--text-sm)", color: "var(--text-3)", marginBottom: "16px", lineHeight: 1.5 } }, "Organize your tasks for today, this week, or any custom timeframe."),
+		React.createElement("div", { style: { fontSize: "var(--text-md)", fontWeight: 600, marginBottom: "6px" } }, "Create your first board"),
+		React.createElement("div", { style: { fontSize: "var(--text-base)", color: "var(--text-3)", marginBottom: "16px", lineHeight: 1.5 } }, "Organize your tasks for today, this week, or any custom timeframe."),
 		React.createElement("div", { style: { display: "flex", gap: "6px" } },
 			...presets.map(p =>
 				React.createElement("button", { key: p.label, style: S.presetBtn, onClick: () => createBoard(p.name) }, p.label)
@@ -381,40 +381,40 @@ export function KanbanPanel() {
 const S: Record<string, React.CSSProperties> = {
 	root: { display: "flex", flexDirection: "column", height: "100%", fontFamily: "var(--font-mono)", color: "var(--text-0)", background: "var(--bg-1)", overflow: "hidden" },
 	header: { display: "flex", alignItems: "center", borderBottom: "1px solid var(--border)", flexShrink: 0, padding: "0 12px 0 0" },
-	taskCount: { fontSize: "var(--text-sm)", color: "var(--text-3)", marginLeft: "auto", flexShrink: 0 },
+	taskCount: { fontSize: "var(--text-base)", color: "var(--text-3)", marginLeft: "auto", flexShrink: 0 },
 
 	// Board selector
 	selector: { display: "flex", alignItems: "center", gap: "4px", position: "relative" as const },
-	selectorBtn: { background: "none", border: "none", cursor: "pointer", color: "var(--text-0)", fontFamily: "var(--font-mono)", fontSize: "var(--text-base)", padding: "8px 10px", display: "flex", alignItems: "center" },
-	tabClose: { background: "none", border: "none", color: "var(--text-3)", cursor: "pointer", fontSize: "14px", padding: "4px 6px", lineHeight: 1, opacity: 0.6 },
-	newTabBtn: { background: "none", border: "none", color: "var(--text-3)", cursor: "pointer", fontSize: "18px", padding: "4px 8px", lineHeight: 1 },
+	selectorBtn: { background: "none", border: "none", cursor: "pointer", color: "var(--text-0)", fontFamily: "var(--font-mono)", fontSize: "var(--text-md)", padding: "8px 10px", display: "flex", alignItems: "center" },
+	tabClose: { background: "none", border: "none", color: "var(--text-3)", cursor: "pointer", fontSize: "var(--text-md)", padding: "4px 6px", lineHeight: 1, opacity: 0.6 },
+	newTabBtn: { background: "none", border: "none", color: "var(--text-3)", cursor: "pointer", fontSize: "var(--text-2xl)", padding: "4px 8px", lineHeight: 1 },
 	dropdown: { position: "absolute" as const, top: "100%", left: 0, zIndex: 50, background: "var(--bg-1)", border: "1px solid var(--border)", borderRadius: "6px", padding: "8px", minWidth: "260px", maxWidth: "360px", boxShadow: "0 6px 20px rgba(0,0,0,0.3)" },
 	dropdownList: { maxHeight: "300px", overflowY: "auto" as const, display: "flex", flexDirection: "column" as const, gap: "2px" },
-	dropdownItem: { display: "flex", alignItems: "center", gap: "8px", padding: "7px 8px", borderRadius: "4px", cursor: "pointer", fontSize: "var(--text-sm)", color: "var(--text-1)", transition: "background 0.08s" },
+	dropdownItem: { display: "flex", alignItems: "center", gap: "8px", padding: "7px 8px", borderRadius: "4px", cursor: "pointer", fontSize: "var(--text-base)", color: "var(--text-1)", transition: "background 0.08s" },
 
 	// New board
 	newBoard: { padding: "10px 12px", borderBottom: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: "8px", flexShrink: 0 },
 	newBoardPresets: { display: "flex", gap: "6px" },
-	presetBtn: { background: "var(--bg-2)", border: "1px solid var(--border)", borderRadius: "5px", color: "var(--text-1)", fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", padding: "6px 14px", cursor: "pointer" },
+	presetBtn: { background: "var(--bg-2)", border: "1px solid var(--border)", borderRadius: "5px", color: "var(--text-1)", fontFamily: "var(--font-mono)", fontSize: "var(--text-base)", padding: "6px 14px", cursor: "pointer" },
 
 	// Board
 	board: { display: "flex", flex: 1, gap: "1px", overflow: "hidden", background: "var(--border)" },
 	column: { flex: 1, display: "flex", flexDirection: "column", background: "var(--bg-1)", minWidth: 0, overflow: "hidden", transition: "background 0.1s" },
 	colHeader: { display: "flex", alignItems: "center", gap: "8px", padding: "10px 12px", flexShrink: 0 },
 	colDot: { width: "9px", height: "9px", borderRadius: "50%", flexShrink: 0 },
-	colName: { fontWeight: 600, fontSize: "var(--text-sm)", color: "var(--text-1)", textTransform: "uppercase" as const, letterSpacing: "0.5px" },
-	colCount: { fontSize: "var(--text-xs)", color: "var(--text-3)", background: "var(--bg-2)", borderRadius: "8px", padding: "1px 6px", lineHeight: "16px" },
-	addBtn: { marginLeft: "auto", background: "none", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-3)", cursor: "pointer", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", lineHeight: 1, padding: 0 },
+	colName: { fontWeight: 600, fontSize: "var(--text-base)", color: "var(--text-1)", textTransform: "uppercase" as const, letterSpacing: "0.5px" },
+	colCount: { fontSize: "var(--text-sm)", color: "var(--text-3)", background: "var(--bg-2)", borderRadius: "8px", padding: "1px 6px", lineHeight: "16px" },
+	addBtn: { marginLeft: "auto", background: "none", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-3)", cursor: "pointer", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "var(--text-xl)", lineHeight: 1, padding: 0 },
 	cardList: { flex: 1, overflowY: "auto", padding: "0 10px 10px", display: "flex", flexDirection: "column", gap: "5px" },
 
 	// Cards
 	card: { background: "var(--bg-2)", border: "1px solid var(--border)", borderRadius: "6px", padding: "8px 10px", cursor: "grab", transition: "opacity 0.1s", userSelect: "none" as const, maxWidth: "300px" },
-	cardTitle: { fontSize: "var(--text-sm)", fontWeight: 500, color: "var(--text-0)", lineHeight: 1.4 },
+	cardTitle: { fontSize: "var(--text-base)", fontWeight: 500, color: "var(--text-0)", lineHeight: 1.4 },
 	cardMeta: { display: "flex", alignItems: "center", gap: "6px", marginTop: "4px" },
-	badge: { fontSize: "9px", fontWeight: 700, color: "#000", padding: "1px 5px", borderRadius: "3px", textTransform: "uppercase" as const, letterSpacing: "0.3px", lineHeight: "15px" },
-	cardDesc: { fontSize: "var(--text-xs)", color: "var(--text-3)", marginTop: "3px", lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const },
-	emptyCol: { textAlign: "center" as const, color: "var(--text-3)", fontSize: "var(--text-sm)", padding: "20px 0", opacity: 0.4 },
-	addCardBtn: { background: "transparent", border: "1px dashed var(--border)", borderRadius: "6px", padding: "8px 10px", cursor: "pointer", fontSize: "var(--text-sm)", color: "var(--text-3)", textAlign: "center" as const, transition: "border-color 0.1s, color 0.1s", maxWidth: "300px" },
+	badge: { fontSize: "var(--text-xs)", fontWeight: 700, color: "#000", padding: "1px 5px", borderRadius: "3px", textTransform: "uppercase" as const, letterSpacing: "0.3px", lineHeight: "15px" },
+	cardDesc: { fontSize: "var(--text-sm)", color: "var(--text-3)", marginTop: "3px", lineHeight: 1.4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const },
+	emptyCol: { textAlign: "center" as const, color: "var(--text-3)", fontSize: "var(--text-base)", padding: "20px 0", opacity: 0.4 },
+	addCardBtn: { background: "transparent", border: "1px dashed var(--border)", borderRadius: "6px", padding: "8px 10px", cursor: "pointer", fontSize: "var(--text-base)", color: "var(--text-3)", textAlign: "center" as const, transition: "border-color 0.1s, color 0.1s", maxWidth: "300px" },
 	dropLine: { height: "2px", background: "var(--accent)", borderRadius: "1px", margin: "1px 0", flexShrink: 0 },
 
 	// Empty state
@@ -422,13 +422,13 @@ const S: Record<string, React.CSSProperties> = {
 
 	// Forms
 	cardEdit: { background: "var(--bg-2)", border: "1px solid var(--accent)", borderRadius: "6px", padding: "8px", display: "flex", flexDirection: "column", gap: "6px", maxWidth: "300px" },
-	input: { background: "var(--bg-1)", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-0)", fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", padding: "5px 8px", outline: "none", width: "100%", boxSizing: "border-box" as const },
+	input: { background: "var(--bg-1)", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-0)", fontFamily: "var(--font-mono)", fontSize: "var(--text-base)", padding: "5px 8px", outline: "none", width: "100%", boxSizing: "border-box" as const },
 	textarea: { resize: "vertical" as const, minHeight: "36px", lineHeight: 1.5 },
-	select: { background: "var(--bg-1)", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-0)", fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", padding: "4px 6px", outline: "none", cursor: "pointer" },
+	select: { background: "var(--bg-1)", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-0)", fontFamily: "var(--font-mono)", fontSize: "var(--text-base)", padding: "4px 6px", outline: "none", cursor: "pointer" },
 	formRow: { display: "flex", alignItems: "center", gap: "8px" },
-	formLabel: { fontSize: "var(--text-sm)", color: "var(--text-3)", width: "55px", flexShrink: 0 },
+	formLabel: { fontSize: "var(--text-base)", color: "var(--text-3)", width: "55px", flexShrink: 0 },
 	formActions: { display: "flex", alignItems: "center", gap: "6px", marginTop: "4px" },
-	btnSave: { background: "var(--accent)", border: "none", borderRadius: "4px", color: "#fff", fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", padding: "5px 12px", cursor: "pointer" },
-	btnCancel: { background: "none", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-3)", fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", padding: "5px 10px", cursor: "pointer" },
-	btnDelete: { background: "none", border: "1px solid transparent", borderRadius: "4px", color: "#f87171", fontFamily: "var(--font-mono)", fontSize: "var(--text-sm)", padding: "5px 10px", cursor: "pointer" },
+	btnSave: { background: "var(--accent)", border: "none", borderRadius: "4px", color: "#fff", fontFamily: "var(--font-mono)", fontSize: "var(--text-base)", padding: "5px 12px", cursor: "pointer" },
+	btnCancel: { background: "none", border: "1px solid var(--border)", borderRadius: "4px", color: "var(--text-3)", fontFamily: "var(--font-mono)", fontSize: "var(--text-base)", padding: "5px 10px", cursor: "pointer" },
+	btnDelete: { background: "none", border: "1px solid transparent", borderRadius: "4px", color: "#f87171", fontFamily: "var(--font-mono)", fontSize: "var(--text-base)", padding: "5px 10px", cursor: "pointer" },
 };
