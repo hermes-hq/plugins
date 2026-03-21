@@ -17,22 +17,25 @@ export interface Column {
 	cards: Card[];
 }
 
-export interface KanbanState {
+export interface Board {
+	id: string;
+	name: string;
 	columns: Column[];
+	createdAt: string;
+}
+
+export interface KanbanState {
+	boards: Board[];
+	activeBoardId: string | null;
 	editingCard: string | null;
 	addingToColumn: string | null;
+	creatingBoard: boolean;
 }
 
 // ─── Plugin API Types ─────────────────────────────────────
 
-interface Disposable {
-	dispose(): void;
-}
-
-interface PluginPanelProps {
-	pluginId: string;
-	panelId: string;
-}
+interface Disposable { dispose(): void; }
+interface PluginPanelProps { pluginId: string; panelId: string; }
 
 interface HermesPluginAPI {
 	subscriptions: Disposable[];
@@ -51,27 +54,53 @@ interface HermesPluginAPI {
 	};
 }
 
+// ─── Helpers ──────────────────────────────────────────────
+
+function makeColumns(): Column[] {
+	return [
+		{ id: "todo", name: "To Do", cards: [] },
+		{ id: "in-progress", name: "In Progress", cards: [] },
+		{ id: "done", name: "Done", cards: [] },
+	];
+}
+
+function todayLabel(): string {
+	const d = new Date();
+	return d.toLocaleDateString("en", { weekday: "short", month: "short", day: "numeric" });
+}
+
+function weekLabel(): string {
+	const now = new Date();
+	const mon = new Date(now);
+	mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+	const fri = new Date(mon);
+	fri.setDate(mon.getDate() + 4);
+	const fmt = (d: Date) => d.toLocaleDateString("en", { month: "short", day: "numeric" });
+	return `${fmt(mon)} – ${fmt(fri)}`;
+}
+
+export function getBoardPresets(): { label: string; name: string }[] {
+	return [
+		{ label: "Today", name: todayLabel() },
+		{ label: "This Week", name: weekLabel() },
+	];
+}
+
 // ─── State Management ─────────────────────────────────────
 
-const DEFAULT_COLUMNS: Column[] = [
-	{ id: "todo", name: "To Do", cards: [] },
-	{ id: "in-progress", name: "In Progress", cards: [] },
-	{ id: "done", name: "Done", cards: [] },
-];
-
 let state: KanbanState = {
-	columns: DEFAULT_COLUMNS,
+	boards: [],
+	activeBoardId: null,
 	editingCard: null,
 	addingToColumn: null,
+	creatingBoard: false,
 };
 
 let listeners = new Set<() => void>();
 let api: HermesPluginAPI | null = null;
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
-export function getState(): KanbanState {
-	return state;
-}
+export function getState(): KanbanState { return state; }
 
 export function subscribe(listener: () => void): () => void {
 	listeners.add(listener);
@@ -79,19 +108,22 @@ export function subscribe(listener: () => void): () => void {
 }
 
 function notify() {
-	for (const l of listeners) {
-		try { l(); } catch { /* ignore */ }
-	}
+	for (const l of listeners) { try { l(); } catch { /* */ } }
 }
 
 function updateStatusBar() {
 	if (!api) return;
-	const total = state.columns.reduce((sum, col) => sum + col.cards.length, 0);
-	const doing = state.columns.find(c => c.id === "in-progress")?.cards.length ?? 0;
-	api.ui.updateStatusBarItem("kanban.status", {
-		text: doing > 0 ? `Kanban: ${doing} active` : `Kanban: ${total}`,
-		tooltip: `${total} tasks total`,
-	});
+	const board = state.boards.find(b => b.id === state.activeBoardId);
+	if (board) {
+		const total = board.columns.reduce((s, c) => s + c.cards.length, 0);
+		const doing = board.columns.find(c => c.id === "in-progress")?.cards.length ?? 0;
+		api.ui.updateStatusBarItem("kanban.status", {
+			text: doing > 0 ? `${board.name}: ${doing} active` : `${board.name}: ${total}`,
+			tooltip: `${board.name} — ${total} tasks`,
+		});
+	} else {
+		api.ui.updateStatusBarItem("kanban.status", { text: "Planner" });
+	}
 }
 
 function scheduleSave() {
@@ -99,12 +131,66 @@ function scheduleSave() {
 	saveTimer = setTimeout(async () => {
 		if (!api) return;
 		try {
-			await api.storage.set("kanban-columns", JSON.stringify(state.columns));
-		} catch { /* ignore */ }
+			await api.storage.set("planner-boards", JSON.stringify(state.boards));
+			await api.storage.set("planner-active", state.activeBoardId ?? "");
+		} catch { /* */ }
 	}, 300);
 }
 
-// ─── Actions ──────────────────────────────────────────────
+// ─── Board Actions ────────────────────────────────────────
+
+export function createBoard(name: string) {
+	const board: Board = {
+		id: crypto.randomUUID(),
+		name: name.trim(),
+		columns: makeColumns(),
+		createdAt: new Date().toISOString(),
+	};
+	state = {
+		...state,
+		boards: [...state.boards, board],
+		activeBoardId: board.id,
+		creatingBoard: false,
+		editingCard: null,
+		addingToColumn: null,
+	};
+	notify(); scheduleSave(); updateStatusBar();
+}
+
+export function deleteBoard(boardId: string) {
+	const remaining = state.boards.filter(b => b.id !== boardId);
+	state = {
+		...state,
+		boards: remaining,
+		activeBoardId: remaining.length > 0
+			? (state.activeBoardId === boardId ? remaining[remaining.length - 1].id : state.activeBoardId)
+			: null,
+		editingCard: null,
+		addingToColumn: null,
+	};
+	notify(); scheduleSave(); updateStatusBar();
+}
+
+export function switchBoard(boardId: string) {
+	state = { ...state, activeBoardId: boardId, editingCard: null, addingToColumn: null };
+	notify(); scheduleSave(); updateStatusBar();
+}
+
+export function setCreatingBoard(v: boolean) {
+	state = { ...state, creatingBoard: v };
+	notify();
+}
+
+// ─── Card Actions ─────────────────────────────────────────
+
+function updateActiveBoard(fn: (columns: Column[]) => Column[]) {
+	state = {
+		...state,
+		boards: state.boards.map(b =>
+			b.id === state.activeBoardId ? { ...b, columns: fn(b.columns) } : b
+		),
+	};
+}
 
 export function addCard(columnId: string, title: string, description: string, priority: Card["priority"], dueDate: string | null) {
 	const card: Card = {
@@ -115,87 +201,49 @@ export function addCard(columnId: string, title: string, description: string, pr
 		dueDate,
 		createdAt: new Date().toISOString(),
 	};
-	state = {
-		...state,
-		addingToColumn: null,
-		columns: state.columns.map(col =>
-			col.id === columnId ? { ...col, cards: [...col.cards, card] } : col
-		),
-	};
-	notify();
-	scheduleSave();
-	updateStatusBar();
+	updateActiveBoard(cols => cols.map(col =>
+		col.id === columnId ? { ...col, cards: [...col.cards, card] } : col
+	));
+	state = { ...state, addingToColumn: null };
+	notify(); scheduleSave(); updateStatusBar();
 }
 
 export function updateCard(cardId: string, updates: Partial<Pick<Card, "title" | "description" | "priority" | "dueDate">>) {
-	state = {
-		...state,
-		editingCard: null,
-		columns: state.columns.map(col => ({
-			...col,
-			cards: col.cards.map(card =>
-				card.id === cardId ? { ...card, ...updates } : card
-			),
-		})),
-	};
-	notify();
-	scheduleSave();
+	updateActiveBoard(cols => cols.map(col => ({
+		...col,
+		cards: col.cards.map(card => card.id === cardId ? { ...card, ...updates } : card),
+	})));
+	state = { ...state, editingCard: null };
+	notify(); scheduleSave();
 }
 
 export function deleteCard(cardId: string) {
-	state = {
-		...state,
-		editingCard: null,
-		columns: state.columns.map(col => ({
-			...col,
-			cards: col.cards.filter(card => card.id !== cardId),
-		})),
-	};
-	notify();
-	scheduleSave();
-	updateStatusBar();
-}
-
-export function moveCard(cardId: string, toColumnId: string) {
-	let movedCard: Card | null = null;
-	const withoutCard = state.columns.map(col => {
-		const found = col.cards.find(c => c.id === cardId);
-		if (found) movedCard = found;
-		return { ...col, cards: col.cards.filter(c => c.id !== cardId) };
-	});
-	if (!movedCard) return;
-	state = {
-		...state,
-		editingCard: null,
-		columns: withoutCard.map(col =>
-			col.id === toColumnId ? { ...col, cards: [...col.cards, movedCard!] } : col
-		),
-	};
-	notify();
-	scheduleSave();
-	updateStatusBar();
+	updateActiveBoard(cols => cols.map(col => ({
+		...col,
+		cards: col.cards.filter(card => card.id !== cardId),
+	})));
+	state = { ...state, editingCard: null };
+	notify(); scheduleSave(); updateStatusBar();
 }
 
 export function reorderCard(cardId: string, toColumnId: string, toIndex: number) {
 	let movedCard: Card | null = null;
-	const withoutCard = state.columns.map(col => {
-		const found = col.cards.find(c => c.id === cardId);
-		if (found) movedCard = found;
-		return { ...col, cards: col.cards.filter(c => c.id !== cardId) };
-	});
-	if (!movedCard) return;
-	state = {
-		...state,
-		columns: withoutCard.map(col => {
+	updateActiveBoard(cols => {
+		const without = cols.map(col => {
+			const found = col.cards.find(c => c.id === cardId);
+			if (found) movedCard = found;
+			return { ...col, cards: col.cards.filter(c => c.id !== cardId) };
+		});
+		if (!movedCard) return cols;
+		return without.map(col => {
 			if (col.id !== toColumnId) return col;
 			const cards = [...col.cards];
 			cards.splice(toIndex, 0, movedCard!);
 			return { ...col, cards };
-		}),
-	};
-	notify();
-	scheduleSave();
-	updateStatusBar();
+		});
+	});
+	state = { ...state, editingCard: null };
+	notify(); scheduleSave(); updateStatusBar();
 }
 
 export function setEditing(cardId: string | null) {
@@ -213,18 +261,37 @@ export function setAdding(columnId: string | null) {
 export async function activate(pluginApi: HermesPluginAPI) {
 	api = pluginApi;
 
-	// Load persisted data
+	// Load persisted data (try new key first, fall back to legacy)
 	try {
-		const stored = await api.storage.get("kanban-columns");
+		let stored = await api.storage.get("planner-boards");
 		if (stored) {
-			const columns = JSON.parse(stored);
-			if (Array.isArray(columns) && columns.length > 0) {
-				state.columns = columns;
+			const boards = JSON.parse(stored);
+			if (Array.isArray(boards) && boards.length > 0) {
+				state.boards = boards;
 			}
+		} else {
+			// Migrate from old kanban-columns key
+			const legacy = await api.storage.get("kanban-columns");
+			if (legacy) {
+				const columns = JSON.parse(legacy);
+				if (Array.isArray(columns) && columns.length > 0) {
+					state.boards = [{
+						id: crypto.randomUUID(),
+						name: "My Tasks",
+						columns,
+						createdAt: new Date().toISOString(),
+					}];
+				}
+			}
+		}
+		const activeId = await api.storage.get("planner-active");
+		if (activeId && state.boards.some(b => b.id === activeId)) {
+			state.activeBoardId = activeId;
+		} else if (state.boards.length > 0) {
+			state.activeBoardId = state.boards[state.boards.length - 1].id;
 		}
 	} catch { /* use defaults */ }
 
-	// Lazy-load the panel component
 	const { KanbanPanel } = await import("./KanbanPanel");
 	api.ui.registerPanel("kanban-board-panel", KanbanPanel);
 
