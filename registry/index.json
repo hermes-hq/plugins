@@ -442,6 +442,35 @@
           ]
         }
       ]
+    },
+    {
+      "id": "hermes-hq.kanban-board",
+      "name": "Kanban Board",
+      "version": "1.0.0",
+      "description": "Lightweight task board to organize your work without leaving the IDE",
+      "author": "Hermes IDE",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 5v11\"/><path d=\"M12 5v6\"/><path d=\"M18 5v14\"/></svg>",
+      "category": "Productivity",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/kanban-board-v1.0.0/hermes-hq.kanban-board-1.0.0.tgz",
+      "minAppVersion": "0.5.11",
+      "permissions": [
+        "storage"
+      ],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-03-21",
+          "changes": [
+            "Kanban board with To Do, In Progress, and Done columns",
+            "Create, edit, and delete task cards",
+            "Drag and drop cards between columns",
+            "Priority labels (Low, Medium, High) with color coding",
+            "Optional due dates with overdue highlighting",
+            "Full-width bottom panel for comfortable viewing",
+            "All data persists across app restarts"
+          ]
+        }
+      ]
     }
   ]
 }
