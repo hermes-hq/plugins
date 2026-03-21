@@ -47,5 +47,8 @@
       }
     }
   },
+  "engines": {
+    "hermes": ">=0.5.20"
+  },
   "permissions": ["network", "storage"]
 }
