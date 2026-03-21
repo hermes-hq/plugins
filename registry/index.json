@@ -4,18 +4,25 @@
     {
       "id": "hermes-hq.json-formatter",
       "name": "JSON Formatter",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "description": "Format, minify, and validate JSON from clipboard or manual input",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M8 3H6a2 2 0 0 0-2 2v2m0 10v2a2 2 0 0 0 2 2h2M16 3h2a2 2 0 0 1 2 2v2m0 10v2a2 2 0 0 1-2 2h-2\"/><path d=\"M9 12h6M12 9v6\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1\"/><path d=\"M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1\"/></svg>",
       "category": "Formatters",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/json-formatter-v1.0.2/hermes-hq.json-formatter-1.0.2.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/json-formatter-v1.0.3/hermes-hq.json-formatter-1.0.3.tgz",
       "minAppVersion": "0.3.0",
       "permissions": [
         "clipboard.read",
         "clipboard.write"
       ],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.0.2",
           "date": "2026-03-18",
@@ -42,17 +49,24 @@
     {
       "id": "hermes-hq.uuid-generator",
       "name": "UUID Generator",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "description": "Generate UUIDs in all standard versions (v1, v4, v5, v7) with batch support",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"3\"/><path d=\"M8 8h2M14 8h2M8 12h8M8 16h4\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"4\" x2=\"20\" y1=\"9\" y2=\"9\"/><line x1=\"4\" x2=\"20\" y1=\"15\" y2=\"15\"/><line x1=\"10\" x2=\"8\" y1=\"3\" y2=\"21\"/><line x1=\"16\" x2=\"14\" y1=\"3\" y2=\"21\"/></svg>",
       "category": "Utilities",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/uuid-generator-v1.0.1/hermes-hq.uuid-generator-1.0.1.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/uuid-generator-v1.0.2/hermes-hq.uuid-generator-1.0.2.tgz",
       "minAppVersion": "0.3.0",
       "permissions": [
         "clipboard.write"
       ],
       "changelog": [
+        {
+          "version": "1.0.2",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.0.1",
           "date": "2026-03-15",
@@ -72,18 +86,25 @@
     {
       "id": "hermes-hq.pomodoro-timer",
       "name": "Pomodoro Timer",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "description": "Focus timer with configurable work and break intervals, notifications, and session tracking",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"13\" r=\"9\"/><path d=\"M12 7v4l3 2\"/><path d=\"M9 2h6\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"10\" x2=\"14\" y1=\"2\" y2=\"2\"/><line x1=\"12\" x2=\"15\" y1=\"14\" y2=\"11\"/><circle cx=\"12\" cy=\"14\" r=\"8\"/></svg>",
       "category": "Productivity",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.2/hermes-hq.pomodoro-timer-1.0.2.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pomodoro-timer-v1.0.3/hermes-hq.pomodoro-timer-1.0.3.tgz",
       "minAppVersion": "0.4.0",
       "permissions": [
         "storage",
         "notifications"
       ],
       "changelog": [
+        {
+          "version": "1.0.3",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.0.2",
           "date": "2026-03-12",
@@ -110,18 +131,25 @@
     {
       "id": "hermes-hq.session-notes",
       "name": "Session Notes",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "description": "Markdown scratchpad for each terminal session with auto-save and session-aware switching",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z\"/><path d=\"M8 7h8M8 11h8M8 15h4\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4\"/><path d=\"M2 6h4\"/><path d=\"M2 10h4\"/><path d=\"M2 14h4\"/><path d=\"M2 18h4\"/><path d=\"M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z\"/></svg>",
       "category": "Productivity",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/session-notes-v1.2.0/hermes-hq.session-notes-1.2.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/session-notes-v1.2.1/hermes-hq.session-notes-1.2.1.tgz",
       "minAppVersion": "0.4.0",
       "permissions": [
         "storage",
         "sessions.read"
       ],
       "changelog": [
+        {
+          "version": "1.2.1",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.2.0",
           "date": "2026-03-18",
@@ -151,18 +179,25 @@
     {
       "id": "hermes-hq.regex-tester",
       "name": "Regex Tester",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Test regular expressions with live match highlighting, capture groups, and common presets",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M4 12h16\"/><path d=\"M12 4v16\"/><circle cx=\"7\" cy=\"7\" r=\"2\"/><circle cx=\"17\" cy=\"17\" r=\"2\"/><path d=\"M17 7L7 17\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M17 3v10\"/><path d=\"m12.67 5.5 8.66 5\"/><path d=\"m12.67 10.5 8.66-5\"/><path d=\"M9 17a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-2z\"/></svg>",
       "category": "Development",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/regex-tester-v1.0.0/hermes-hq.regex-tester-1.0.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/regex-tester-v1.0.1/hermes-hq.regex-tester-1.0.1.tgz",
       "minAppVersion": "0.4.0",
       "permissions": [
         "clipboard.write",
         "storage"
       ],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.0.0",
           "date": "2026-03-01",
@@ -175,12 +210,12 @@
     {
       "id": "hermes-hq.rss-reader",
       "name": "RSS Feed Reader",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "description": "Subscribe to RSS and Atom feeds, browse articles, and get notified of new content without leaving the terminal",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"6\" cy=\"19\" r=\"2\" fill=\"currentColor\"/><path d=\"M4 13a8 8 0 0 1 8 8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/><path d=\"M4 7a14 14 0 0 1 14 14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11a9 9 0 0 1 9 9\"/><path d=\"M4 4a16 16 0 0 1 16 16\"/><circle cx=\"5\" cy=\"19\" r=\"1\"/></svg>",
       "category": "Productivity",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/rss-reader-v1.0.4/hermes-hq.rss-reader-1.0.4.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/rss-reader-v1.0.5/hermes-hq.rss-reader-1.0.5.tgz",
       "minAppVersion": "0.5.4",
       "permissions": [
         "network",
@@ -189,6 +224,13 @@
         "clipboard.write"
       ],
       "changelog": [
+        {
+          "version": "1.0.5",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.0.4",
           "date": "2026-03-14",
@@ -237,18 +279,25 @@
     {
       "id": "hermes-hq.pixel-office",
       "name": "Pixel Office",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "description": "Visualize AI coding agents as animated pixel art characters in a virtual office",
       "author": "Hermes HQ",
-      "icon": "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><rect x='2' y='4' width='14' height='11' rx='1'/><path d='M5 4V3a1 1 0 011-1h6a1 1 0 011 1v1'/><line x1='2' y1='9' x2='16' y2='9'/><rect x='7' y='6' width='4' height='3' rx='0.5'/><line x1='6' y1='12' x2='6' y2='13'/><line x1='12' y1='12' x2='12' y2='13'/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"14\" x=\"2\" y=\"3\" rx=\"2\"/><line x1=\"8\" x2=\"16\" y1=\"21\" y2=\"21\"/><line x1=\"12\" x2=\"12\" y1=\"17\" y2=\"21\"/></svg>",
       "category": "Visualization",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pixel-office-v0.1.0/hermes-hq.pixel-office-0.1.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/pixel-office-v0.1.1/hermes-hq.pixel-office-0.1.1.tgz",
       "minAppVersion": "0.5.11",
       "permissions": [
         "storage",
         "sessions.read"
       ],
       "changelog": [
+        {
+          "version": "0.1.1",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated panel icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "0.1.0",
           "date": "2026-03-15",
@@ -268,12 +317,12 @@
     {
       "id": "hermes-hq.ip-network-info",
       "name": "IP & Network Info",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "description": "Display public IP address, DNS lookups, and WHOIS information",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/><path d=\"M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\"/><path d=\"M2 12h20\"/></svg>",
       "category": "Utilities",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/ip-network-info-v1.1.0/hermes-hq.ip-network-info-1.1.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/ip-network-info-v1.1.1/hermes-hq.ip-network-info-1.1.1.tgz",
       "minAppVersion": "0.5.16",
       "permissions": [
         "network",
@@ -281,6 +330,13 @@
         "shell.exec"
       ],
       "changelog": [
+        {
+          "version": "1.1.1",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.1.0",
           "date": "2026-03-18",
@@ -308,7 +364,7 @@
       "version": "1.2.0",
       "description": "Rich preview and editor for Markdown files with formatting toolbar and Mermaid diagram support",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M7 16V8l3.5 4L14 8v8\"/><path d=\"M17 13l-2.5 3L12 13\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"M7 16V8l3.5 4L14 8v8\"/><path d=\"M17 13l-2.5 3L12 13\"/></svg>",
       "category": "Quality of Life",
       "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/markdown-preview-v1.2.0/hermes-hq.markdown-preview-1.2.0.tgz",
       "minAppVersion": "0.5.17",
@@ -356,17 +412,24 @@
     {
       "id": "hermes-hq.cron-builder",
       "name": "Cron Expression Builder",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "Visual cron expression builder with human-readable descriptions and next run previews",
       "author": "Hermes IDE",
-      "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M12 6v6l4 4\"/></svg>",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5\"/><path d=\"M16 2v4\"/><path d=\"M8 2v4\"/><path d=\"M3 10h5\"/><circle cx=\"16\" cy=\"16\" r=\"6\"/><path d=\"M16 14v2.2l1.6 1\"/></svg>",
       "category": "Development",
-      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/cron-builder-v1.0.0/hermes-hq.cron-builder-1.0.0.tgz",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/cron-builder-v1.0.1/hermes-hq.cron-builder-1.0.1.tgz",
       "minAppVersion": "0.5.16",
       "permissions": [
         "clipboard.write"
       ],
       "changelog": [
+        {
+          "version": "1.0.1",
+          "date": "2026-03-21",
+          "changes": [
+            "Updated sidebar icon to Lucide for better visual distinction"
+          ]
+        },
         {
           "version": "1.0.0",
           "date": "2026-03-19",
