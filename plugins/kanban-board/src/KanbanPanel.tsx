@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
 	getState, subscribe, getBoardPresets,
-	createBoard, deleteBoard, switchBoard, setCreatingBoard,
+	createBoard, deleteBoard, switchBoard, setCreatingBoard, renameBoard,
 	addCard, updateCard, deleteCard, reorderCard,
 	setAdding,
 	type Card, type Column, type Board, type KanbanState,
@@ -261,7 +261,10 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 	const [open, setOpen] = useState(false);
 	const [search, setSearch] = useState("");
 	const [confirmDel, setConfirmDel] = useState<string | null>(null);
+	const [renaming, setRenaming] = useState(false);
+	const [renameName, setRenameName] = useState("");
 	const searchRef = useRef<HTMLInputElement>(null);
+	const renameRef = useRef<HTMLInputElement>(null);
 	const dropRef = useRef<HTMLDivElement>(null);
 
 	const activeBoard = boards.find(b => b.id === activeId);
@@ -269,6 +272,10 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 	useEffect(() => {
 		if (open && searchRef.current) searchRef.current.focus();
 	}, [open]);
+
+	useEffect(() => {
+		if (renaming && renameRef.current) { renameRef.current.focus(); renameRef.current.select(); }
+	}, [renaming]);
 
 	// Close dropdown on outside click
 	useEffect(() => {
@@ -280,6 +287,20 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 		return () => document.removeEventListener("mousedown", handler);
 	}, [open]);
 
+	const startRename = () => {
+		if (!activeBoard) return;
+		setRenameName(activeBoard.name);
+		setRenaming(true);
+		setOpen(false);
+	};
+
+	const commitRename = () => {
+		if (activeBoard && renameName.trim()) {
+			renameBoard(activeBoard.id, renameName);
+		}
+		setRenaming(false);
+	};
+
 	const filtered = search.trim()
 		? boards.filter(b => b.name.toLowerCase().includes(search.toLowerCase()))
 		: boards;
@@ -288,10 +309,24 @@ function BoardSelector({ boards, activeId, onNew }: { boards: Board[]; activeId:
 	const sorted = [...filtered].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
 	return React.createElement("div", { style: S.selector, ref: dropRef },
-		React.createElement("button", { style: S.selectorBtn, onClick: () => { setOpen(!open); setSearch(""); setConfirmDel(null); } },
-			React.createElement("span", { style: { fontWeight: 600 } }, activeBoard?.name ?? "Select board"),
-			React.createElement("span", { style: { fontSize: "var(--text-xs)", marginLeft: "4px", opacity: 0.5 } }, open ? "▲" : "▼"),
-		),
+		renaming
+			? React.createElement("input", {
+				ref: renameRef,
+				style: { ...S.input, fontWeight: 600, fontSize: "var(--text-md)", width: "160px", padding: "5px 8px", margin: "4px 0 4px 6px" },
+				value: renameName,
+				onChange: (e: any) => setRenameName(e.target.value),
+				onKeyDown: (e: any) => { if (e.key === "Enter") commitRename(); if (e.key === "Escape") setRenaming(false); },
+				onBlur: commitRename,
+			})
+			: React.createElement("button", {
+				style: S.selectorBtn,
+				onClick: () => { setOpen(!open); setSearch(""); setConfirmDel(null); },
+				onDoubleClick: (e: any) => { e.preventDefault(); startRename(); },
+				title: "Click to browse boards · Double-click to rename",
+			},
+				React.createElement("span", { style: { fontWeight: 600 } }, activeBoard?.name ?? "Select board"),
+				React.createElement("span", { style: { fontSize: "var(--text-xs)", marginLeft: "4px", opacity: 0.5 } }, open ? "▲" : "▼"),
+			),
 		React.createElement("button", { style: S.newTabBtn, onClick: onNew, title: "New board" }, "+"),
 		activeBoard && React.createElement("button", {
 			style: S.tabClose,

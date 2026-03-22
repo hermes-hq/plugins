@@ -176,6 +176,16 @@ export function switchBoard(boardId: string) {
 	notify(); scheduleSave(); updateStatusBar();
 }
 
+export function renameBoard(boardId: string, newName: string) {
+	const trimmed = newName.trim();
+	if (!trimmed) return;
+	state = {
+		...state,
+		boards: state.boards.map(b => b.id === boardId ? { ...b, name: trimmed } : b),
+	};
+	notify(); scheduleSave(); updateStatusBar();
+}
+
 export function setCreatingBoard(v: boolean) {
 	state = { ...state, creatingBoard: v };
 	notify();

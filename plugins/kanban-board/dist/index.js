@@ -343,12 +343,21 @@ var __hermes_plugin__ = (function(exports, react) {
 		const [open, setOpen] = useState(false);
 		const [search, setSearch] = useState("");
 		const [confirmDel, setConfirmDel] = useState(null);
+		const [renaming, setRenaming] = useState(false);
+		const [renameName, setRenameName] = useState("");
 		const searchRef = useRef(null);
+		const renameRef = useRef(null);
 		const dropRef = useRef(null);
 		const activeBoard = boards.find((b) => b.id === activeId);
 		useEffect(() => {
 			if (open && searchRef.current) searchRef.current.focus();
 		}, [open]);
+		useEffect(() => {
+			if (renaming && renameRef.current) {
+				renameRef.current.focus();
+				renameRef.current.select();
+			}
+		}, [renaming]);
 		useEffect(() => {
 			if (!open) return;
 			const handler = (e) => {
@@ -357,17 +366,49 @@ var __hermes_plugin__ = (function(exports, react) {
 			document.addEventListener("mousedown", handler);
 			return () => document.removeEventListener("mousedown", handler);
 		}, [open]);
+		const startRename = () => {
+			if (!activeBoard) return;
+			setRenameName(activeBoard.name);
+			setRenaming(true);
+			setOpen(false);
+		};
+		const commitRename = () => {
+			if (activeBoard && renameName.trim()) renameBoard(activeBoard.id, renameName);
+			setRenaming(false);
+		};
 		const sorted = [...search.trim() ? boards.filter((b) => b.name.toLowerCase().includes(search.toLowerCase())) : boards].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 		return react.createElement("div", {
 			style: S.selector,
 			ref: dropRef
-		}, react.createElement("button", {
+		}, renaming ? react.createElement("input", {
+			ref: renameRef,
+			style: {
+				...S.input,
+				fontWeight: 600,
+				fontSize: "var(--text-md)",
+				width: "160px",
+				padding: "5px 8px",
+				margin: "4px 0 4px 6px"
+			},
+			value: renameName,
+			onChange: (e) => setRenameName(e.target.value),
+			onKeyDown: (e) => {
+				if (e.key === "Enter") commitRename();
+				if (e.key === "Escape") setRenaming(false);
+			},
+			onBlur: commitRename
+		}) : react.createElement("button", {
 			style: S.selectorBtn,
 			onClick: () => {
 				setOpen(!open);
 				setSearch("");
 				setConfirmDel(null);
-			}
+			},
+			onDoubleClick: (e) => {
+				e.preventDefault();
+				startRename();
+			},
+			title: "Click to browse boards · Double-click to rename"
 		}, react.createElement("span", { style: { fontWeight: 600 } }, activeBoard?.name ?? "Select board"), react.createElement("span", { style: {
 			fontSize: "var(--text-xs)",
 			marginLeft: "4px",
@@ -973,6 +1014,20 @@ var __hermes_plugin__ = (function(exports, react) {
 		scheduleSave();
 		updateStatusBar();
 	}
+	function renameBoard(boardId, newName) {
+		const trimmed = newName.trim();
+		if (!trimmed) return;
+		state = {
+			...state,
+			boards: state.boards.map((b) => b.id === boardId ? {
+				...b,
+				name: trimmed
+			} : b)
+		};
+		notify();
+		scheduleSave();
+		updateStatusBar();
+	}
 	function setCreatingBoard(v) {
 		state = {
 			...state,
@@ -1142,6 +1197,7 @@ var __hermes_plugin__ = (function(exports, react) {
 	exports.deleteCard = deleteCard;
 	exports.getBoardPresets = getBoardPresets;
 	exports.getState = getState;
+	exports.renameBoard = renameBoard;
 	exports.reorderCard = reorderCard;
 	exports.setAdding = setAdding;
 	exports.setCreatingBoard = setCreatingBoard;

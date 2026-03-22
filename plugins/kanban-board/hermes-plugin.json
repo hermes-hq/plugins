@@ -1,7 +1,7 @@
 {
   "id": "hermes-hq.kanban-board",
   "name": "Planner",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Personal Kanban board for daily, weekly, and custom task planning",
   "author": "Hermes IDE",
   "main": "dist/index.js",
