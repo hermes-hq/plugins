@@ -1,0 +1,32 @@
+{
+  "id": "doctatortot.snippets-manager",
+  "name": "Snippets Manager",
+  "version": "0.1.0",
+  "description": "Save, tag, and quickly recall reusable code and command snippets.",
+  "author": "doctatortot",
+  "main": "dist/index.js",
+  "activationEvents": [
+    { "type": "onStartup" }
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "snippets-manager.open",
+        "title": "Open Snippets Manager",
+        "category": "Snippets Manager"
+      }
+    ],
+    "panels": [
+      {
+        "id": "snippets-manager-panel",
+        "name": "Snippets",
+        "side": "left",
+        "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 3L2 9l4 6\"/><path d=\"M12 3l4 6-4 6\"/></svg>"
+      }
+    ]
+  },
+  "permissions": [
+    "storage",
+    "clipboard.write"
+  ]
+}
