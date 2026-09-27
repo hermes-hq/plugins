@@ -599,6 +599,31 @@
           ]
         }
       ]
+    },
+    {
+      "id": "doctatortot.clipboard-history",
+      "name": "Clipboard History",
+      "version": "0.1.0",
+      "description": "Keep a searchable history of clipboard contents for quick recall.",
+      "author": "doctatortot",
+      "icon": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"3\" width=\"8\" height=\"12\" rx=\"1\"/><path d=\"M7 3V2h4v1\"/><path d=\"M7.5 8h3M7.5 11h3\"/></svg>",
+      "category": "Productivity",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/clipboard-history-v0.1.0/doctatortot.clipboard-history-0.1.0.tgz",
+      "minAppVersion": "0.5.20",
+      "permissions": [
+        "clipboard.read",
+        "clipboard.write",
+        "storage"
+      ],
+      "changelog": [
+        {
+          "version": "0.1.0",
+          "date": "2026-09-27",
+          "changes": [
+            "Initial release — polls clipboard for changes, searchable history, pin/unpin, configurable size limit, click-to-copy"
+          ]
+        }
+      ]
     }
   ]
 }
