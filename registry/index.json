@@ -599,6 +599,34 @@
           ]
         }
       ]
+    },
+    {
+      "id": "hermes-hq.password-generator",
+      "name": "Password Generator",
+      "version": "1.0.0",
+      "description": "Generate secure passwords, passphrases, and API-key-style secrets with a strength meter and clipboard auto-clear",
+      "author": "Hermes IDE",
+      "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"7.5\" cy=\"15.5\" r=\"5.5\"/><path d=\"m21 2-9.6 9.6\"/><path d=\"m15.5 7.5 3 3L22 7l-3-3\"/></svg>",
+      "category": "Utilities",
+      "downloadUrl": "https://github.com/hermes-hq/plugins/releases/download/password-generator-v1.0.0/hermes-hq.password-generator-1.0.0.tgz",
+      "minAppVersion": "0.3.0",
+      "permissions": [
+        "clipboard.write",
+        "clipboard.read"
+      ],
+      "changelog": [
+        {
+          "version": "1.0.0",
+          "date": "2026-09-28",
+          "changes": [
+            "Generate random passwords with configurable length and character sets",
+            "Generate memorable word-based passphrases with a 1424-word list",
+            "Generate API-key-style tokens with an optional prefix",
+            "Entropy-based password strength meter",
+            "Copy to clipboard with configurable auto-clear timeout"
+          ]
+        }
+      ]
     }
   ]
 }
